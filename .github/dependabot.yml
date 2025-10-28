@@ -13,6 +13,17 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
+    # Auto-merge minor and patch updates for dev dependencies
+    groups:
+      dev-dependencies:
+        patterns:
+          - "pytest*"
+          - "black"
+          - "isort"
+          - "flake8"
+          - "mypy"
+          - "pre-commit"
+          - "bandit"
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -23,3 +34,10 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
+    # GitHub Actions are generally safe to auto-update
+    groups:
+      github-actions:
+        patterns:
+          - "actions/*"
+          - "github/*"
+          - "codecov/*"
