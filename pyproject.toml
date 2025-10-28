@@ -43,6 +43,7 @@ pre-commit = ">=3.4.0,<4.0.0"
 bandit = ">=1.7.5,<2.0.0"
 jupyter = ">=1.0.0,<2.0.0"
 types-setuptools = "*"
+toml = ">=0.10.0,<1.0.0"
 
 [tool.poetry.scripts]
 pcr-template-generator = "pcr_template_generator.cli:main"
@@ -91,6 +92,9 @@ strict_equality = true
 minversion = "6.0"
 addopts = "-ra -q --strict-markers --strict-config"
 testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

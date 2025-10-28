@@ -24,7 +24,7 @@ from .rules import (
     SecondaryLimit,
 )
 from .sequence import Sequence
-from .generator import run_experiment
+from .generator import run_experiment, generate_multiple_templates, analyze_sequence_statistics
 
 __version__ = "1.0.0"
 __author__ = "Reto"
@@ -39,4 +39,6 @@ __all__ = [
     "SecondaryLimit",
     "Sequence",
     "run_experiment",
+    "generate_multiple_templates",
+    "analyze_sequence_statistics",
 ]

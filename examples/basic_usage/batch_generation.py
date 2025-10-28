@@ -12,6 +12,19 @@ Requirements:
 Usage:
     python batch_generation.py
 """
+"""
+Batch PCR Template Generation Example
+
+This example demonstrates how to generate multiple PCR templates
+and analyze their properties for comparison and selection.
+
+Requirements:
+- pcr-template-generator>=1.0.0
+- Python>=3.10
+
+Usage:
+    python batch_generation.py
+"""
 
 from pcr_template_generator import generate_multiple_templates
 from Bio.SeqUtils import GC, MeltingTemp
