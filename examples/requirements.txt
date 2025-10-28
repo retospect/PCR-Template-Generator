@@ -1,0 +1,22 @@
+# PCR Template Generator Examples Requirements
+# This file is synced with pyproject.toml dependencies
+# Generated automatically - do not edit manually
+
+# Main package (install from PyPI)
+pcr-template-generator>=1.0.0
+
+# Core dependencies (from pyproject.toml [tool.poetry.dependencies])
+biopython>=1.78,<2.0.0
+numpy>=1.21.0,<2.0.0
+matplotlib>=3.5.0,<4.0.0
+
+# Additional dependencies for examples
+pandas>=1.5.0,<3.0.0          # For data manipulation examples
+seaborn>=0.11.0,<1.0.0         # For advanced plotting
+jupyter>=1.0.0,<2.0.0          # For notebook examples
+ipywidgets>=8.0.0,<9.0.0       # For interactive notebooks
+scipy>=1.9.0,<2.0.0            # For statistical analysis
+
+# Development/testing (optional)
+pytest>=7.4.0,<9.0.0           # For running example tests
+black>=23.0.0,<25.0.0          # For code formatting

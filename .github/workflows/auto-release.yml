@@ -1,0 +1,133 @@
+name: Auto Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['pyproject.toml']
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version-changed: ${{ steps.version-check.outputs.changed }}
+      new-version: ${{ steps.version-check.outputs.version }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        
+    - name: Check version change
+      id: version-check
+      run: |
+        # Get current version from pyproject.toml
+        CURRENT_VERSION=$(grep '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Get previous version from git
+        git checkout HEAD~1 -- pyproject.toml 2>/dev/null || echo "No previous version"
+        if [ -f pyproject.toml ]; then
+          PREVIOUS_VERSION=$(grep '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/' || echo "0.0.0")
+        else
+          PREVIOUS_VERSION="0.0.0"
+        fi
+        echo "Previous version: $PREVIOUS_VERSION"
+        
+        # Restore current pyproject.toml
+        git checkout HEAD -- pyproject.toml
+        
+        # Check if version changed
+        if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+          echo "Version unchanged: $CURRENT_VERSION"
+        fi
+
+  test-and-release:
+    needs: check-version
+    if: needs.check-version.outputs.version-changed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        
+    - name: Install dependencies
+      run: poetry install --with dev
+      
+    - name: Run full test suite
+      run: |
+        poetry run pytest --cov=pcr_template_generator --cov-report=term-missing tests/ -v
+        poetry run bandit -r src/ -f txt
+        
+    - name: Build package
+      run: poetry build
+      
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.check-version.outputs.new-version }}
+        release_name: Release v${{ needs.check-version.outputs.new-version }}
+        body: |
+          ## Changes in v${{ needs.check-version.outputs.new-version }}
+          
+          This release was automatically created when the version was updated in pyproject.toml.
+          
+          ### Installation
+          ```bash
+          pip install pcr-template-generator==${{ needs.check-version.outputs.new-version }}
+          ```
+          
+          ### What's Changed
+          - Version bump to ${{ needs.check-version.outputs.new-version }}
+          - See commit history for detailed changes
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/commits/main
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/pcr_template_generator-${{ needs.check-version.outputs.new-version }}-py3-none-any.whl
+        asset_name: pcr_template_generator-${{ needs.check-version.outputs.new-version }}-py3-none-any.whl
+        asset_content_type: application/zip
+        
+    - name: Upload Source Distribution
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/pcr-template-generator-${{ needs.check-version.outputs.new-version }}.tar.gz
+        asset_name: pcr-template-generator-${{ needs.check-version.outputs.new-version }}.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true

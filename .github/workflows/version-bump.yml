@@ -1,0 +1,82 @@
+name: Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Type of version bump'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        
+    - name: Install dependencies
+      run: poetry install --with dev
+      
+    - name: Run tests before version bump
+      run: |
+        poetry run pytest --cov=pcr_template_generator tests/ -v
+        poetry run bandit -r src/ -f txt
+        
+    - name: Get current version
+      id: current-version
+      run: |
+        CURRENT_VERSION=$(poetry version -s)
+        echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $CURRENT_VERSION"
+        
+    - name: Bump version
+      id: bump-version
+      run: |
+        poetry version ${{ github.event.inputs.bump_type }}
+        NEW_VERSION=$(poetry version -s)
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "New version: $NEW_VERSION"
+        
+    - name: Update __init__.py version
+      run: |
+        NEW_VERSION="${{ steps.bump-version.outputs.version }}"
+        sed -i "s/__version__ = \".*\"/__version__ = \"$NEW_VERSION\"/" src/pcr_template_generator/__init__.py
+        
+    - name: Commit version bump
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add pyproject.toml src/pcr_template_generator/__init__.py
+        git commit -m "Bump version from ${{ steps.current-version.outputs.version }} to ${{ steps.bump-version.outputs.version }}"
+        git push
+        
+    - name: Create summary
+      run: |
+        echo "## Version Bump Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Previous version:** ${{ steps.current-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **New version:** ${{ steps.bump-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Bump type:** ${{ github.event.inputs.bump_type }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The auto-release workflow will trigger automatically to create a release and publish to PyPI." >> $GITHUB_STEP_SUMMARY

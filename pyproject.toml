@@ -1,0 +1,118 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "pcr-template-generator"
+version = "1.0.0"
+description = "A Python library for generating optimized DNA templates for PCR primers and probes using simulated annealing"
+authors = ["Reto <reto@example.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/retospect/PCR-Template-Generator"
+repository = "https://github.com/retospect/PCR-Template-Generator"
+documentation = "https://github.com/retospect/PCR-Template-Generator"
+keywords = ["pcr", "dna", "primers", "probes", "bioinformatics", "molecular-biology", "qpcr", "template-generation"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+packages = [{include = "pcr_template_generator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+biopython = ">=1.78,<2.0.0"
+numpy = ">=1.21.0,<2.0.0"
+matplotlib = ">=3.5.0,<4.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0,<9.0.0"
+pytest-cov = ">=4.1.0,<6.0.0"
+black = ">=23.0.0,<25.0.0"
+isort = ">=5.12.0,<6.0.0"
+flake8 = ">=6.0.0,<8.0.0"
+mypy = ">=1.5.0,<2.0.0"
+pre-commit = ">=3.4.0,<4.0.0"
+bandit = ">=1.7.5,<2.0.0"
+jupyter = ">=1.0.0,<2.0.0"
+types-setuptools = "*"
+
+[tool.poetry.scripts]
+pcr-template-generator = "pcr_template_generator.cli:main"
+
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["pcr_template_generator"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
