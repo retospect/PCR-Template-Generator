@@ -6,7 +6,7 @@ This example demonstrates advanced statistical analysis and visualization
 of PCR template properties using the PCR Template Generator library.
 
 Requirements:
-- pcr-template-generator>=1.0.0
+- pcr-template-generator>=2.0.0
 - matplotlib>=3.5.0
 - numpy>=1.21.0
 - pandas>=1.5.0 (optional, for data manipulation)

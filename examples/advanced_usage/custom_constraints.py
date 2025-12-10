@@ -7,7 +7,7 @@ parameters to customize PCR template generation for specific experimental
 requirements.
 
 Requirements:
-- pcr-template-generator>=1.0.0
+- pcr-template-generator>=2.0.0
 - Python>=3.10
 
 Usage:

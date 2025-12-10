@@ -6,7 +6,7 @@ This example demonstrates the basic usage of the PCR Template Generator
 to create a single optimized DNA template for PCR primers and probes.
 
 Requirements:
-- pcr-template-generator>=1.0.0
+- pcr-template-generator>=2.0.0
 - Python>=3.10
 
 Usage:

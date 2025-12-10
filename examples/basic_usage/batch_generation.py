@@ -6,7 +6,7 @@ This example demonstrates how to generate multiple PCR templates
 and analyze their properties for comparison and selection.
 
 Requirements:
-- pcr-template-generator>=1.0.0
+- pcr-template-generator>=2.0.0
 - Python>=3.10
 
 Usage:
@@ -19,7 +19,7 @@ This example demonstrates how to generate multiple PCR templates
 and analyze their properties for comparison and selection.
 
 Requirements:
-- pcr-template-generator>=1.0.0
+- pcr-template-generator>=2.0.0
 - Python>=3.10
 
 Usage:

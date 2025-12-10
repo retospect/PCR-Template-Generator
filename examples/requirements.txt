@@ -3,7 +3,7 @@
 # Generated automatically - do not edit manually
 
 # Main package (install from PyPI)
-pcr-template-generator>=1.0.0
+pcr-template-generator>=2.0.0
 
 # Core dependencies (from pyproject.toml [tool.poetry.dependencies])
 biopython>=1.80,<2.0.0
