@@ -1,9 +1,10 @@
 """Linting tests that fail early if code needs formatting or has quality issues."""
 
+import os
 import subprocess
 import sys
-import os
 from pathlib import Path
+
 import pytest
 
 
@@ -29,7 +30,7 @@ class TestCodeFormatting:
             text=True,
             cwd=get_project_root(),
         )
-        
+
         if result.returncode != 0:
             pytest.fail(
                 f"Code is not properly formatted with black. Run 'black {src_path}' to fix.\n"
@@ -45,7 +46,7 @@ class TestCodeFormatting:
             text=True,
             cwd=get_project_root(),
         )
-        
+
         if result.returncode != 0:
             pytest.fail(
                 f"Imports are not properly sorted. Run 'isort {src_path}' to fix.\n"
@@ -61,13 +62,13 @@ class TestCodeFormatting:
             text=True,
             cwd=get_project_root(),
         )
-        
-        if result.returncode != 0:
-            pytest.fail(
-                f"Code quality issues found with flake8:\n{result.stdout}"
-            )
 
-    @pytest.mark.skipif(sys.platform.startswith("win"), reason="Skip mypy on Windows for CI stability")
+        if result.returncode != 0:
+            pytest.fail(f"Code quality issues found with flake8:\n{result.stdout}")
+
+    @pytest.mark.skipif(
+        sys.platform.startswith("win"), reason="Skip mypy on Windows for CI stability"
+    )
     def test_mypy_type_checking(self):
         """Test type annotations with mypy."""
         src_path = get_src_path()
@@ -77,11 +78,9 @@ class TestCodeFormatting:
             text=True,
             cwd=get_project_root(),
         )
-        
+
         if result.returncode != 0:
-            pytest.fail(
-                f"Type checking issues found with mypy:\n{result.stdout}"
-            )
+            pytest.fail(f"Type checking issues found with mypy:\n{result.stdout}")
 
 
 class TestProjectStructure:
@@ -109,11 +108,11 @@ class TestProjectStructure:
         package_path = get_src_path() / "pcr_template_generator"
         required_modules = [
             "rules.py",
-            "sequence.py", 
+            "sequence.py",
             "generator.py",
             "cli.py",
         ]
-        
+
         for module in required_modules:
             module_path = package_path / module
             assert module_path.exists(), f"{module} should exist"
@@ -137,9 +136,9 @@ class TestCodeQuality:
         """Test that no debug statements are left in code."""
         src_path = get_src_path()
         debug_patterns = ["pdb.set_trace()", "breakpoint()", "import pdb"]
-        
+
         for py_file in src_path.rglob("*.py"):
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
                 for pattern in debug_patterns:
                     if pattern in content:
@@ -148,41 +147,49 @@ class TestCodeQuality:
     def test_no_print_statements_in_library(self):
         """Test that library code doesn't contain print statements (except CLI)."""
         src_path = get_src_path() / "pcr_template_generator"
-        
+
         for py_file in src_path.rglob("*.py"):
             # Skip CLI module and __init__.py
             if py_file.name in ["cli.py", "__init__.py"]:
                 continue
-                
-            with open(py_file, 'r', encoding='utf-8') as f:
+
+            with open(py_file, "r", encoding="utf-8") as f:
                 lines = f.readlines()
                 for i, line in enumerate(lines, 1):
                     # Skip comments and docstrings
                     stripped = line.strip()
-                    if stripped.startswith('#') or stripped.startswith('"""') or stripped.startswith("'''"):
+                    if (
+                        stripped.startswith("#")
+                        or stripped.startswith('"""')
+                        or stripped.startswith("'''")
+                    ):
                         continue
-                    if 'print(' in line:
-                        pytest.fail(f"Print statement found in {py_file}:{i}: {line.strip()}")
+                    if "print(" in line:
+                        pytest.fail(
+                            f"Print statement found in {py_file}:{i}: {line.strip()}"
+                        )
 
     def test_proper_docstrings(self):
         """Test that modules and classes have docstrings."""
         src_path = get_src_path() / "pcr_template_generator"
-        
+
         for py_file in src_path.rglob("*.py"):
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
-                
+
             # Check for module docstring
-            if not content.strip().startswith('"""') and not content.strip().startswith("'''"):
+            if not content.strip().startswith('"""') and not content.strip().startswith(
+                "'''"
+            ):
                 pytest.fail(f"Module {py_file} should have a docstring")
 
     def test_no_hardcoded_paths(self):
         """Test that no hardcoded file paths exist."""
         src_path = get_src_path()
         suspicious_patterns = ["/home/", "/Users/", "C:\\", "D:\\"]
-        
+
         for py_file in src_path.rglob("*.py"):
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
                 for pattern in suspicious_patterns:
                     if pattern in content:
@@ -191,23 +198,23 @@ class TestCodeQuality:
     def test_imports_at_top(self):
         """Test that imports are at the top of files."""
         src_path = get_src_path() / "pcr_template_generator"
-        
+
         for py_file in src_path.rglob("*.py"):
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 lines = f.readlines()
-            
+
             # Find first non-comment, non-docstring, non-empty line
             in_docstring = False
             docstring_char = None
             found_code = False
-            
+
             for i, line in enumerate(lines):
                 stripped = line.strip()
-                
+
                 # Skip empty lines
                 if not stripped:
                     continue
-                    
+
                 # Handle docstrings
                 if stripped.startswith('"""') or stripped.startswith("'''"):
                     if not in_docstring:
@@ -218,20 +225,24 @@ class TestCodeQuality:
                     elif stripped.endswith(docstring_char):
                         in_docstring = False
                     continue
-                    
+
                 if in_docstring:
                     continue
-                    
+
                 # Skip comments
-                if stripped.startswith('#'):
+                if stripped.startswith("#"):
                     continue
-                
+
                 # Check if this is an import after we've seen other code
-                if found_code and (stripped.startswith('import ') or stripped.startswith('from ')):
-                    pytest.fail(f"Import found after code in {py_file}:{i+1}: {stripped}")
-                
+                if found_code and (
+                    stripped.startswith("import ") or stripped.startswith("from ")
+                ):
+                    pytest.fail(
+                        f"Import found after code in {py_file}:{i+1}: {stripped}"
+                    )
+
                 # Mark that we've seen code
-                if not (stripped.startswith('import ') or stripped.startswith('from ')):
+                if not (stripped.startswith("import ") or stripped.startswith("from ")):
                     found_code = True
 
 
@@ -247,7 +258,7 @@ class TestSecurity:
             text=True,
             cwd=get_project_root(),
         )
-        
+
         # Bandit returns 1 for issues found, 0 for no issues
         if result.returncode == 1:
             # Check if there are actual high/medium severity issues
@@ -264,22 +275,27 @@ class TestSecurity:
             "token",
             "auth",
         ]
-        
+
         for py_file in src_path.rglob("*.py"):
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read().lower()
-                
+
             for pattern in secret_patterns:
                 # Look for suspicious assignments
                 if f"{pattern} = " in content and "example" not in content:
                     # This is a basic check - more sophisticated analysis would be better
-                    lines = content.split('\n')
+                    lines = content.split("\n")
                     for i, line in enumerate(lines):
-                        if f"{pattern} = " in line and not line.strip().startswith('#'):
+                        if f"{pattern} = " in line and not line.strip().startswith("#"):
                             # Skip obvious test/example cases
-                            if any(word in line for word in ["test", "example", "dummy", "mock"]):
+                            if any(
+                                word in line
+                                for word in ["test", "example", "dummy", "mock"]
+                            ):
                                 continue
-                            pytest.fail(f"Potential hardcoded secret in {py_file}:{i+1}: {line.strip()}")
+                            pytest.fail(
+                                f"Potential hardcoded secret in {py_file}:{i+1}: {line.strip()}"
+                            )
 
 
 if __name__ == "__main__":

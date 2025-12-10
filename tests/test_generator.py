@@ -1,12 +1,13 @@
 """Tests for generator module."""
 
-import pytest
 from unittest.mock import patch
 
+import pytest
+
 from pcr_template_generator.generator import (
-    run_experiment,
-    generate_multiple_templates,
     analyze_sequence_statistics,
+    generate_multiple_templates,
+    run_experiment,
 )
 from pcr_template_generator.sequence import Sequence
 
@@ -22,7 +23,7 @@ class TestRunExperiment:
 
     def test_run_experiment_with_debug(self):
         """Test run_experiment with debug enabled."""
-        with patch('builtins.print') as mock_print:
+        with patch("builtins.print") as mock_print:
             result = run_experiment(max_iterations=50, debug=True)
             # Should have printed debug messages
             assert mock_print.called
@@ -75,9 +76,7 @@ class TestGenerateMultipleTemplates:
 
     def test_generate_multiple_templates(self):
         """Test generating multiple templates."""
-        templates = generate_multiple_templates(
-            count=3, max_iterations=50, debug=False
-        )
+        templates = generate_multiple_templates(count=3, max_iterations=50, debug=False)
         assert isinstance(templates, list)
         assert len(templates) <= 3  # May not generate all
         for template in templates:
@@ -85,7 +84,7 @@ class TestGenerateMultipleTemplates:
 
     def test_generate_with_debug(self):
         """Test generation with debug output."""
-        with patch('builtins.print') as mock_print:
+        with patch("builtins.print") as mock_print:
             templates = generate_multiple_templates(
                 count=2, max_iterations=50, debug=True
             )
@@ -116,9 +115,7 @@ class TestGenerateMultipleTemplates:
     def test_generate_with_failures(self):
         """Test generation when some attempts fail."""
         # Use very low iterations to increase failure rate
-        templates = generate_multiple_templates(
-            count=5, max_iterations=1, debug=False
-        )
+        templates = generate_multiple_templates(count=5, max_iterations=1, debug=False)
         # Should return whatever succeeded
         assert isinstance(templates, list)
         assert len(templates) <= 5
@@ -130,12 +127,12 @@ class TestAnalyzeSequenceStatistics:
     def test_analyze_default_params(self):
         """Test analysis with default parameters."""
         temps, gcs = analyze_sequence_statistics(sample_count=100, debug=False)
-        
+
         assert isinstance(temps, list)
         assert isinstance(gcs, list)
         assert len(temps) == 100
         assert len(gcs) == 100
-        
+
         # Check data ranges
         assert all(isinstance(t, float) for t in temps)
         assert all(isinstance(gc, float) for gc in gcs)
@@ -146,37 +143,35 @@ class TestAnalyzeSequenceStatistics:
         temps, gcs = analyze_sequence_statistics(
             sequence_length=18, sample_count=50, debug=False
         )
-        
+
         assert len(temps) == 50
         assert len(gcs) == 50
 
     def test_analyze_with_debug(self):
         """Test analysis with debug output."""
-        with patch('builtins.print') as mock_print:
-            temps, gcs = analyze_sequence_statistics(
-                sample_count=20, debug=True
-            )
+        with patch("builtins.print") as mock_print:
+            temps, gcs = analyze_sequence_statistics(sample_count=20, debug=True)
             # Should have printed debug messages
             assert mock_print.called
 
     def test_analyze_small_sample(self):
         """Test analysis with small sample size."""
         temps, gcs = analyze_sequence_statistics(sample_count=5, debug=False)
-        
+
         assert len(temps) == 5
         assert len(gcs) == 5
 
     def test_analyze_single_sample(self):
         """Test analysis with single sample."""
         temps, gcs = analyze_sequence_statistics(sample_count=1, debug=False)
-        
+
         assert len(temps) == 1
         assert len(gcs) == 1
 
     def test_analyze_zero_samples(self):
         """Test analysis with zero samples."""
         temps, gcs = analyze_sequence_statistics(sample_count=0, debug=False)
-        
+
         assert temps == []
         assert gcs == []
 
@@ -185,7 +180,7 @@ class TestAnalyzeSequenceStatistics:
         temps, gcs = analyze_sequence_statistics(
             sequence_length=2, sample_count=10, debug=False
         )
-        
+
         assert len(temps) == 10
         assert len(gcs) == 10
         # Should still produce valid results
@@ -196,7 +191,7 @@ class TestAnalyzeSequenceStatistics:
         temps, gcs = analyze_sequence_statistics(
             sequence_length=50, sample_count=10, debug=False
         )
-        
+
         assert len(temps) == 10
         assert len(gcs) == 10
 
@@ -208,12 +203,12 @@ class TestGeneratorIntegration:
         """Test that single experiment works with multiple generation."""
         # First test single experiment
         single_result = run_experiment(max_iterations=100, debug=False)
-        
+
         # Then test multiple generation
         multiple_results = generate_multiple_templates(
             count=2, max_iterations=100, debug=False
         )
-        
+
         # Both should work (though may return None/empty list)
         assert single_result is None or isinstance(single_result, Sequence)
         assert isinstance(multiple_results, list)
@@ -221,20 +216,20 @@ class TestGeneratorIntegration:
     def test_consistent_parameters(self):
         """Test that same parameters give consistent results."""
         params = {
-            'seq_length': 60,
-            'primer_length': 20,
-            'probe_length': 22,
-            'primer_melt': 53.0,
-            'probe_gap': 2,
-            'max_iterations': 100,
+            "seq_length": 60,
+            "primer_length": 20,
+            "probe_length": 22,
+            "primer_melt": 53.0,
+            "probe_gap": 2,
+            "max_iterations": 100,
         }
-        
+
         # Generate single template
         single = run_experiment(**params, debug=False)
-        
+
         # Generate multiple templates
         multiple = generate_multiple_templates(count=1, **params, debug=False)
-        
+
         # If both succeed, should have same parameters
         if single and multiple:
             assert len(single.fwd()) == len(multiple[0].fwd())
@@ -246,12 +241,10 @@ class TestGeneratorIntegration:
         temps, gcs = analyze_sequence_statistics(
             sequence_length=22, sample_count=100, debug=False
         )
-        
+
         # Then try generation
-        template = run_experiment(
-            primer_length=22, max_iterations=50, debug=False
-        )
-        
+        template = run_experiment(primer_length=22, max_iterations=50, debug=False)
+
         # Both should work
         assert len(temps) == 100
         assert template is None or isinstance(template, Sequence)
@@ -261,21 +254,21 @@ class TestGeneratorIntegration:
         # These should not crash even with unusual parameters
         result1 = run_experiment(seq_length=5, primer_length=10)  # Impossible geometry
         result2 = generate_multiple_templates(count=1, seq_length=5, primer_length=10)
-        
+
         # Should handle gracefully
         assert result1 is None or isinstance(result1, Sequence)
         assert isinstance(result2, list)
 
-    @patch('pcr_template_generator.generator.random.choice')
+    @patch("pcr_template_generator.generator.random.choice")
     def test_deterministic_behavior(self, mock_choice):
         """Test behavior with mocked randomness."""
         # Mock random.choice to always return 'a'
-        mock_choice.return_value = 'a'
-        
+        mock_choice.return_value = "a"
+
         result = run_experiment(seq_length=10, max_iterations=10, debug=False)
-        
+
         # Should still work (though likely high cost due to all A's)
         assert result is None or isinstance(result, Sequence)
         if result:
             # Should be all A's
-            assert str(result.fwd()) == 'a' * 10
+            assert str(result.fwd()) == "a" * 10

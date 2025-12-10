@@ -33,7 +33,9 @@ class TestSequenceInit:
 
     def test_init_with_sequence(self):
         """Test initialization with provided sequence."""
-        test_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        test_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=test_seq)
         assert str(seq.fwd()) == test_seq
 
@@ -49,14 +51,18 @@ class TestSequenceComponents:
 
     def test_forward_sequence(self):
         """Test forward sequence extraction."""
-        test_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        test_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=test_seq)
         assert str(seq.fwd()) == test_seq
         assert isinstance(seq.fwd(), Seq)
 
     def test_reverse_sequence(self):
         """Test reverse complement sequence."""
-        test_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        test_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=test_seq)
         rev = seq.rev()
         assert isinstance(rev, Seq)
@@ -66,7 +72,9 @@ class TestSequenceComponents:
 
     def test_forward_primer(self):
         """Test forward primer extraction."""
-        test_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        test_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=test_seq, primer_length=20)
         primer = seq.fwd_primer()
         assert len(primer) == 20
@@ -74,7 +82,9 @@ class TestSequenceComponents:
 
     def test_reverse_primer(self):
         """Test reverse primer extraction."""
-        test_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        test_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=test_seq, primer_length=20)
         primer = seq.rev_primer()
         assert len(primer) == 20
@@ -109,13 +119,15 @@ class TestSequenceMutation:
 
     def test_mutate_default(self):
         """Test mutation with default parameters."""
-        original_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        original_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=original_seq)
         original_str = str(seq.fwd())
-        
+
         seq.mutate()  # default how_many=3
         mutated_str = str(seq.fwd())
-        
+
         # Sequence should be same length
         assert len(mutated_str) == len(original_str)
         # Should be different (with very high probability)
@@ -123,13 +135,15 @@ class TestSequenceMutation:
 
     def test_mutate_custom_count(self):
         """Test mutation with custom mutation count."""
-        original_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        original_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=original_seq)
         original_str = str(seq.fwd())
-        
+
         seq.mutate(how_many=1)
         mutated_str = str(seq.fwd())
-        
+
         assert len(mutated_str) == len(original_str)
         # Count differences
         differences = sum(1 for a, b in zip(original_str, mutated_str) if a != b)
@@ -139,7 +153,7 @@ class TestSequenceMutation:
         """Test mutation with count larger than sequence."""
         seq = Sequence(seq_length=10)
         original_len = len(seq.fwd())
-        
+
         # Should not crash even with excessive mutation count
         seq.mutate(how_many=100)
         assert len(seq.fwd()) == original_len
@@ -147,7 +161,9 @@ class TestSequenceMutation:
     def test_set_sequence(self):
         """Test setting a new sequence."""
         seq = Sequence()
-        new_seq = "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        new_seq = (
+            "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        )
         seq.set_sequence(new_seq)
         assert str(seq.fwd()) == new_seq
 
@@ -159,11 +175,11 @@ class TestSequenceDisplay:
         """Test display format."""
         seq = Sequence(seq_length=75, primer_length=22, probe_length=25)
         display = seq.display()
-        
+
         # Should have 4 lines
-        lines = display.split('\n')
+        lines = display.split("\n")
         assert len(lines) == 4
-        
+
         # Each line should have content
         for line in lines:
             assert len(line) > 0
@@ -172,11 +188,11 @@ class TestSequenceDisplay:
         """Test display consistency with sequence components."""
         seq = Sequence(seq_length=75, primer_length=22, probe_length=25)
         display = seq.display()
-        lines = display.split('\n')
-        
+        lines = display.split("\n")
+
         # Forward template line should match fwd()
         assert str(seq.fwd()) in display
-        
+
         # Should contain primer sequences
         assert str(seq.fwd_primer()) in lines[0]
 
@@ -214,7 +230,9 @@ class TestSequenceCost:
     def test_cost_with_good_sequence(self):
         """Test cost with a well-designed sequence."""
         # This is a sequence that should have relatively low cost
-        good_seq = "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        good_seq = (
+            "atgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgcatgc"
+        )
         seq = Sequence(sequence=good_seq)
         cost = seq.cost()
         assert isinstance(cost, float)
@@ -222,7 +240,9 @@ class TestSequenceCost:
     def test_cost_with_bad_sequence(self):
         """Test cost with a poorly designed sequence."""
         # Sequence with long runs and extreme GC content
-        bad_seq = "aaaaaaaaaaaaaaaaaaaaaaaggggggggggggggggggggggggggcccccccccccccccccccccc"
+        bad_seq = (
+            "aaaaaaaaaaaaaaaaaaaaaaaggggggggggggggggggggggggggcccccccccccccccccccccc"
+        )
         seq = Sequence(sequence=bad_seq)
         cost = seq.cost()
         assert cost > 0  # Should have high cost
@@ -282,18 +302,18 @@ class TestSequenceIntegration:
     def test_full_workflow(self):
         """Test complete workflow: create, mutate, evaluate."""
         seq = Sequence()
-        
+
         # Initial state
         initial_cost = seq.cost()
         initial_seq = str(seq.fwd())
-        
+
         # Mutate
         seq.mutate(how_many=5)
         mutated_seq = str(seq.fwd())
-        
+
         # Re-evaluate
         new_cost = seq.cost()
-        
+
         # Verify changes
         assert len(initial_seq) == len(mutated_seq)
         assert isinstance(initial_cost, float)
@@ -303,14 +323,14 @@ class TestSequenceIntegration:
         """Test multiple rounds of mutation."""
         seq = Sequence()
         original_seq = str(seq.fwd())
-        
+
         # Multiple mutations
         for _ in range(5):
             seq.mutate(how_many=2)
             cost = seq.cost()
             assert isinstance(cost, float)
-        
+
         # Should still be valid sequence
         final_seq = str(seq.fwd())
         assert len(final_seq) == len(original_seq)
-        assert all(base in 'atgc' for base in final_seq)
+        assert all(base in "atgc" for base in final_seq)

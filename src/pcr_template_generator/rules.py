@@ -4,24 +4,19 @@ This module contains various rule classes that evaluate different aspects
 of DNA sequences to ensure they meet PCR primer and probe design criteria.
 """
 
-from typing import List
+from typing import List, Union
+
 import numpy as np
 from Bio.Seq import Seq
-try:
-    from Bio.SeqUtils import GC
-except ImportError:
-    from Bio.SeqUtils.ProtParam import ProteinAnalysis
-    # Fallback for newer BioPython versions
-    def GC(sequence):
-        """Calculate GC content of a DNA sequence."""
-        sequence = str(sequence).upper()
-        gc_count = sequence.count('G') + sequence.count('C')
-        total_count = len(sequence)
-        if total_count == 0:
-            return 0.0
-        return (gc_count / total_count) * 100.0
+from Bio.SeqUtils import MeltingTemp, gc_fraction
 
-from Bio.SeqUtils import MeltingTemp
+
+def GC(sequence: Union[str, Seq]) -> float:
+    """Calculate GC content (returns percentage 0-100).
+
+    Uses BioPython's gc_fraction (available since 1.80) and converts to percentage.
+    """
+    return gc_fraction(sequence) * 100.0
 
 
 BASES: List[str] = ["a", "t", "g", "c"]
@@ -29,14 +24,16 @@ BASES: List[str] = ["a", "t", "g", "c"]
 
 class Rule:
     """Base rule class for evaluating DNA sequence constraints.
-    
+
     All specific rule implementations should inherit from this class
     and implement their evaluation logic in the constructor.
     """
-    
-    def __init__(self, name: str = "BaseRule", sequence: str = "", note: str = "") -> None:
+
+    def __init__(
+        self, name: str = "BaseRule", sequence: str = "", note: str = ""
+    ) -> None:
         """Initialize a rule with name, sequence, and optional note.
-        
+
         Args:
             name: Human-readable name for this rule
             sequence: DNA sequence to evaluate
@@ -61,21 +58,21 @@ class Rule:
 
 class GCContent(Rule):
     """Rule for evaluating GC content within specified range.
-    
+
     Penalizes sequences whose GC content falls outside the target range.
     The penalty is proportional to the distance from the target range.
     """
-    
+
     def __init__(
-        self, 
-        name: str = "GCContent", 
-        min_gc: float = 45, 
-        max_gc: float = 55, 
-        sequence: str = "", 
-        note: str = ""
+        self,
+        name: str = "GCContent",
+        min_gc: float = 45,
+        max_gc: float = 55,
+        sequence: str = "",
+        note: str = "",
     ) -> None:
         """Initialize GC content rule.
-        
+
         Args:
             name: Rule name
             min_gc: Minimum acceptable GC percentage
@@ -94,20 +91,20 @@ class GCContent(Rule):
 
 class LongRuns(Rule):
     """Rule for penalizing long runs of identical bases.
-    
+
     Sequences with runs of identical bases longer than the threshold
     are penalized to avoid issues with PCR amplification.
     """
-    
+
     def __init__(
-        self, 
-        name: str = "LongRuns", 
-        max_len: int = 3, 
-        sequence: str = "", 
-        note: str = ""
+        self,
+        name: str = "LongRuns",
+        max_len: int = 3,
+        sequence: str = "",
+        note: str = "",
     ) -> None:
         """Initialize long runs rule.
-        
+
         Args:
             name: Rule name
             max_len: Maximum allowed length of identical base runs
@@ -124,21 +121,21 @@ class LongRuns(Rule):
 
 class MeltingRange(Rule):
     """Rule for evaluating melting temperature within target range.
-    
+
     Penalizes sequences whose melting temperature falls outside
     the specified range. Uses BioPython's nearest-neighbor method.
     """
-    
+
     def __init__(
         self,
         name: str = "MeltingRange",
         min_temp: float = 45,
         max_temp: float = 55,
         sequence: str = "",
-        note: str = ""
+        note: str = "",
     ) -> None:
         """Initialize melting temperature rule.
-        
+
         Args:
             name: Rule name
             min_temp: Minimum acceptable melting temperature (°C)
@@ -157,20 +154,20 @@ class MeltingRange(Rule):
 
 class SingleMatchOnly(Rule):
     """Rule ensuring a pattern appears exactly once in the sequence.
-    
+
     This rule is used to prevent primer dimers by ensuring that
     3' ends of primers and probes are unique within the template.
     """
-    
+
     def __init__(
-        self, 
-        name: str = "SingleMatchOnly", 
-        sequence: str = "", 
-        pattern: str = "", 
-        note: str = ""
+        self,
+        name: str = "SingleMatchOnly",
+        sequence: str = "",
+        pattern: str = "",
+        note: str = "",
     ) -> None:
         """Initialize single match rule.
-        
+
         Args:
             name: Rule name
             sequence: DNA sequence to search in
@@ -181,12 +178,12 @@ class SingleMatchOnly(Rule):
         if sequence and pattern:
             # Convert to Seq object to use count_overlap method
             seq_obj = Seq(sequence)
-            if hasattr(seq_obj, 'count_overlap'):
+            if hasattr(seq_obj, "count_overlap"):
                 count = seq_obj.count_overlap(pattern)
             else:
                 # Fallback for older BioPython versions
                 count = sequence.count(pattern)
-            
+
             if count > 1:
                 self._cost = 2.0
                 self._note += f" Pattern '{pattern}' found {count} times"
@@ -194,20 +191,20 @@ class SingleMatchOnly(Rule):
 
 class SecondaryLimit(Rule):
     """Rule for limiting secondary structure formation.
-    
+
     Penalizes sequences that can form secondary structures
     (hairpins, self-complementarity) longer than the threshold.
     """
-    
+
     def __init__(
-        self, 
-        name: str = "SecondaryLimit", 
-        sequence: str = "", 
-        max_len: int = 10, 
-        note: str = ""
+        self,
+        name: str = "SecondaryLimit",
+        sequence: str = "",
+        max_len: int = 10,
+        note: str = "",
     ) -> None:
         """Initialize secondary structure rule.
-        
+
         Args:
             name: Rule name
             sequence: DNA sequence to evaluate
@@ -218,16 +215,16 @@ class SecondaryLimit(Rule):
         if sequence:
             seq_obj = Seq(sequence)
             for i in range(len(sequence) - max_len):
-                substr = sequence[i:i + max_len]
+                substr = sequence[i : i + max_len]
                 substr_seq = Seq(substr)
-                
+
                 # Check for complement matches
                 if sequence.find(str(substr_seq.complement())) > -1:
                     self._cost += 1
-                    
+
                 # Check for reverse complement matches (hairpins)
                 if sequence.find(str(substr_seq.reverse_complement())) > -1:
                     self._cost += 1
-                    
+
             if self._cost > 0:
                 self._note += f" Secondary structures detected"

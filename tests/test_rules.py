@@ -4,12 +4,12 @@ import pytest
 from Bio.Seq import Seq
 
 from pcr_template_generator.rules import (
-    Rule,
     GCContent,
     LongRuns,
     MeltingRange,
-    SingleMatchOnly,
+    Rule,
     SecondaryLimit,
+    SingleMatchOnly,
 )
 
 
@@ -178,7 +178,7 @@ class TestRuleIntegration:
     def test_all_rules_with_realistic_sequence(self):
         """Test all rules with a realistic PCR primer sequence."""
         primer_seq = "atgcatgcatgcatgcatgcat"
-        
+
         rules = [
             GCContent(sequence=primer_seq, min_gc=45, max_gc=55),
             LongRuns(sequence=primer_seq, max_len=3),
@@ -186,7 +186,7 @@ class TestRuleIntegration:
             SingleMatchOnly(sequence=primer_seq * 2, pattern=primer_seq[:4]),
             SecondaryLimit(sequence=primer_seq, max_len=4),
         ]
-        
+
         for rule in rules:
             assert isinstance(rule.get_cost(), float)
             assert isinstance(rule.get_name(), str)
@@ -195,13 +195,13 @@ class TestRuleIntegration:
     def test_rules_with_problematic_sequence(self):
         """Test rules with a sequence designed to violate constraints."""
         bad_seq = "aaaaaaggggggcccccctttttt"  # Long runs, extreme GC regions
-        
+
         rules = [
             GCContent(sequence=bad_seq, min_gc=45, max_gc=55),
             LongRuns(sequence=bad_seq, max_len=3),
             MeltingRange(sequence=bad_seq, min_temp=50, max_temp=60),
         ]
-        
+
         # At least some rules should detect problems
         total_cost = sum(rule.get_cost() for rule in rules)
         assert total_cost > 0

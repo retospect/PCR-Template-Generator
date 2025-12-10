@@ -8,7 +8,11 @@ import argparse
 import sys
 from typing import Optional
 
-from .generator import run_experiment, generate_multiple_templates, analyze_sequence_statistics
+from .generator import (
+    analyze_sequence_statistics,
+    generate_multiple_templates,
+    run_experiment,
+)
 
 
 def main() -> None:
@@ -257,7 +261,9 @@ def run_generation(args: argparse.Namespace) -> None:
 
         if args.verbose:
             success_rate = len(templates) / args.count * 100
-            print(f"Generated {len(templates)}/{args.count} templates ({success_rate:.1f}% success rate)")
+            print(
+                f"Generated {len(templates)}/{args.count} templates ({success_rate:.1f}% success rate)"
+            )
 
 
 def run_analysis(args: argparse.Namespace) -> None:
@@ -265,7 +271,9 @@ def run_analysis(args: argparse.Namespace) -> None:
     if args.verbose or args.debug:
         print("PCR Template Generator - Sequence Analysis")
         print("=" * 50)
-        print(f"Analyzing {args.samples} random sequences of length {args.primer_length}")
+        print(
+            f"Analyzing {args.samples} random sequences of length {args.primer_length}"
+        )
         print()
 
     temperatures, gc_contents = analyze_sequence_statistics(
@@ -276,7 +284,7 @@ def run_analysis(args: argparse.Namespace) -> None:
 
     # Calculate statistics
     import numpy as np
-    
+
     temp_mean = np.mean(temperatures)
     temp_std = np.std(temperatures)
     gc_mean = np.mean(gc_contents)
@@ -292,27 +300,29 @@ def run_analysis(args: argparse.Namespace) -> None:
     if args.verbose:
         try:
             import matplotlib.pyplot as plt
-            
+
             fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-            
+
             # Temperature histogram
-            ax1.hist(temperatures, bins=30, alpha=0.7, edgecolor='black')
-            ax1.set_xlabel('Melting Temperature (°C)')
-            ax1.set_ylabel('Frequency')
-            ax1.set_title('Distribution of Melting Temperatures')
-            ax1.axvline(temp_mean, color='red', linestyle='--', label=f'Mean: {temp_mean:.1f}°C')
+            ax1.hist(temperatures, bins=30, alpha=0.7, edgecolor="black")
+            ax1.set_xlabel("Melting Temperature (°C)")
+            ax1.set_ylabel("Frequency")
+            ax1.set_title("Distribution of Melting Temperatures")
+            ax1.axvline(
+                temp_mean, color="red", linestyle="--", label=f"Mean: {temp_mean:.1f}°C"
+            )
             ax1.legend()
-            
+
             # GC vs Temperature scatter
             ax2.scatter(gc_contents, temperatures, alpha=0.5, s=1)
-            ax2.set_xlabel('GC Content (%)')
-            ax2.set_ylabel('Melting Temperature (°C)')
-            ax2.set_title('GC Content vs Melting Temperature')
-            
+            ax2.set_xlabel("GC Content (%)")
+            ax2.set_ylabel("Melting Temperature (°C)")
+            ax2.set_title("GC Content vs Melting Temperature")
+
             plt.tight_layout()
-            plt.savefig('sequence_analysis.png', dpi=150, bbox_inches='tight')
+            plt.savefig("sequence_analysis.png", dpi=150, bbox_inches="tight")
             print("\nPlot saved as 'sequence_analysis.png'")
-            
+
         except ImportError:
             print("\nMatplotlib not available for plotting")
 

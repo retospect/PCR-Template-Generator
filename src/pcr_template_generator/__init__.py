@@ -15,16 +15,20 @@ Example:
     ...     print(sequence.display())
 """
 
+from .generator import (
+    analyze_sequence_statistics,
+    generate_multiple_templates,
+    run_experiment,
+)
 from .rules import (
-    Rule,
     GCContent,
     LongRuns,
     MeltingRange,
-    SingleMatchOnly,
+    Rule,
     SecondaryLimit,
+    SingleMatchOnly,
 )
 from .sequence import Sequence
-from .generator import run_experiment, generate_multiple_templates, analyze_sequence_statistics
 
 __version__ = "1.0.0"
 __author__ = "Reto"
@@ -32,7 +36,7 @@ __email__ = "reto@example.com"
 
 __all__ = [
     "Rule",
-    "GCContent", 
+    "GCContent",
     "LongRuns",
     "MeltingRange",
     "SingleMatchOnly",
