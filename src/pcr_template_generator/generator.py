@@ -134,7 +134,7 @@ def run_experiment(
         mutant_sequence.set_sequence(str(best_sequence.fwd()))
 
         # Mutate between 1 and 8 bases
-        mutation_count = random.randint(1, 8)
+        mutation_count = random.randint(1, 8)  # nosec B311
         mutant_sequence.mutate(how_many=mutation_count)
 
         # Evaluate mutant
@@ -147,7 +147,7 @@ def run_experiment(
             time_since_improvement = 0
 
             if debug:
-                print(f"Reduced cost to {best_cost:6.2f} at cycle {iteration:5d}")
+                print(f"Reduced cost to {best_cost:6.2f} at cycle " f"{iteration:5d}")
                 print(mutant_sequence.rule_info())
 
         iteration += 1
@@ -157,20 +157,23 @@ def run_experiment(
         if time_since_improvement > max_iterations // 10:
             if debug:
                 print(
-                    f"No improvement for {time_since_improvement} iterations, stopping early"
+                    f"No improvement for {time_since_improvement} "
+                    f"iterations, stopping early"
                 )
             break
 
     if best_cost <= target_cost:
         if debug:
             print(
-                f"SUCCESS: Found solution with cost {best_cost:.2f} in {iteration} iterations"
+                f"SUCCESS: Found solution with cost {best_cost:.2f} in "
+                f"{iteration} iterations"
             )
         return best_sequence
     else:
         if debug:
             print(
-                f"FAILURE: Could not reach target cost {target_cost} in {iteration} iterations"
+                f"FAILURE: Could not reach target cost {target_cost} in "
+                f"{iteration} iterations"
             )
             print(f"Best cost achieved: {best_cost:.2f}")
         return None
@@ -261,7 +264,8 @@ def generate_multiple_templates(
 
     if debug:
         print(
-            f"Successfully generated {len(templates)} templates out of {count} requested"
+            f"Successfully generated {len(templates)} templates out of "
+            f"{count} requested"
         )
 
     return templates
@@ -272,7 +276,9 @@ def analyze_sequence_statistics(
     sample_count: int = 10000,
     debug: bool = False,
 ) -> Tuple[List[float], List[float]]:
-    """Analyze melting temperature and GC content statistics for random sequences.
+    """Analyze melting temperature and GC content statistics.
+
+    Analyzes random sequences for their properties.
 
     This function generates random sequences and analyzes their properties
     to understand the relationship between GC content and melting temperature.
@@ -294,12 +300,17 @@ def analyze_sequence_statistics(
     gc_contents = []
 
     if debug:
-        print(f"Analyzing {sample_count} random sequences of length {sequence_length}")
+        print(
+            f"Analyzing {sample_count} random sequences of length " f"{sequence_length}"
+        )
 
     for i in range(sample_count):
         # Generate random sequence
         sequence = "".join(
-            [random.choice(["a", "t", "g", "c"]) for _ in range(sequence_length)]
+            [
+                random.choice(["a", "t", "g", "c"])  # nosec B311
+                for _ in range(sequence_length)
+            ]
         )
 
         # Calculate properties

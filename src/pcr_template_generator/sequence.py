@@ -1,13 +1,13 @@
 """DNA sequence class for PCR template generation.
 
-This module contains the main Sequence class that represents a DNA template
-with associated primers and probe, along with methods for evaluation and mutation.
+This module contains the main Sequence class that represents a DNA
+template with associated primers and probe, along with methods for
+evaluation and mutation.
 """
 
 import random
-from typing import List, Optional, Tuple
+from typing import List
 
-import numpy as np
 from Bio.Seq import Seq
 
 from .rules import (
@@ -80,7 +80,8 @@ class Sequence:
             probe_gc_min: Minimum probe GC content (%)
             probe_gc_max: Maximum probe GC content (%)
             max_run_length: Maximum allowed run of identical bases
-            unique_end_length: Length of unique 3' ends for primer dimer prevention
+            unique_end_length: Length of unique 3' ends for primer dimer
+                prevention
             max_secondary_length: Maximum allowed secondary structure length
         """
         self._primer_length = primer_length
@@ -109,7 +110,9 @@ class Sequence:
         self._max_secondary_length = max_secondary_length
 
         if not sequence:
-            sequence = "".join([random.choice(BASES) for _ in range(seq_length)])
+            sequence = "".join(
+                [random.choice(BASES) for _ in range(seq_length)]  # nosec B311
+            )
         self._sequence = Seq(sequence)
 
     def set_sequence(self, new_sequence: str) -> None:
@@ -122,7 +125,7 @@ class Sequence:
 
     def rev(self) -> Seq:
         """Get reverse sequence 5'-3'."""
-        return self._sequence.reverse_complement()
+        return self._sequence.reverse_complement()  # type: ignore[no-any-return]
 
     def fwd_primer(self) -> Seq:
         """Get forward primer 5'-3'."""
@@ -141,7 +144,8 @@ class Sequence:
 
     def rev_primer(self) -> Seq:
         """Get reverse primer 5'-3'."""
-        return self._sequence[-self._primer_length :].reverse_complement()
+        result = self._sequence[-self._primer_length :].reverse_complement()
+        return result  # type: ignore[no-any-return]
 
     def three_prime_ends(self, end_length: int = 4) -> List[Seq]:
         """Get all 3' ends of sequences and primers.
@@ -167,13 +171,13 @@ class Sequence:
             how_many: Number of bases to mutate
         """
         sequence_str = str(self._sequence)
-        indices = random.sample(
+        indices = random.sample(  # nosec B311
             range(len(sequence_str)), min(how_many, len(sequence_str))
         )
 
         sequence_list = list(sequence_str)
         for index in indices:
-            sequence_list[index] = random.choice(BASES)
+            sequence_list[index] = random.choice(BASES)  # nosec B311
 
         self._sequence = Seq("".join(sequence_list))
 
@@ -185,7 +189,8 @@ class Sequence:
         """Get multi-line string showing primers, probe, and template layout.
 
         Returns:
-            Formatted string showing the template structure with primers and probe
+            Formatted string showing the template structure with primers
+            and probe
         """
         template_spacing = (
             self._seq_length
@@ -224,7 +229,9 @@ class Sequence:
         msg = ""
         for rule in self._rules:
             if rule.get_cost() > 0 or verbose:
-                msg += f"{rule.get_cost():.1f} {rule.get_name()} {rule.get_note()}\n"
+                msg += (
+                    f"{rule.get_cost():.1f} {rule.get_name()} " f"{rule.get_note()}\n"
+                )
         return msg
 
     def cost(self) -> float:
@@ -302,7 +309,9 @@ class Sequence:
         for the_end in self.three_prime_ends(self._unique_end_length):
             rules.append(
                 SingleMatchOnly(
-                    sequence=full_length, pattern=str(the_end), note="Unique 3' ends"
+                    sequence=full_length,
+                    pattern=str(the_end),
+                    note="Unique 3' ends",
                 )
             )
 
@@ -363,7 +372,12 @@ class Sequence:
         )
         # 5' end of probe should not be G
         rules.append(
-            GCContent(sequence=probe_seq[:1], min_gc=-1, max_gc=1, note="Probe 5' end")
+            GCContent(
+                sequence=probe_seq[:1],
+                min_gc=-1,
+                max_gc=1,
+                note="Probe 5' end",
+            )
         )
 
         # Secondary structure limits

@@ -1,4 +1,7 @@
-"""PCR Template Generator - A Python library for generating optimized DNA templates for PCR primers and probes.
+"""PCR Template Generator.
+
+A Python library for generating optimized DNA templates for PCR
+primers and probes.
 
 This library uses simulated annealing to generate DNA sequences that satisfy
 multiple constraints for PCR primer and probe design, including:

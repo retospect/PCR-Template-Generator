@@ -14,9 +14,10 @@ from Bio.SeqUtils import MeltingTemp, gc_fraction
 def GC(sequence: Union[str, Seq]) -> float:
     """Calculate GC content (returns percentage 0-100).
 
-    Uses BioPython's gc_fraction (available since 1.80) and converts to percentage.
+    Uses BioPython's gc_fraction (available since 1.80) and converts
+    to percentage.
     """
-    return gc_fraction(sequence) * 100.0
+    return float(gc_fraction(sequence) * 100.0)
 
 
 BASES: List[str] = ["a", "t", "g", "c"]
@@ -83,9 +84,9 @@ class GCContent(Rule):
         super().__init__(name=name, sequence=sequence, note=note)
         if sequence:
             gc_content = GC(sequence)
-            target_gc = np.average([min_gc, max_gc])
+            target_gc = float(np.average([min_gc, max_gc]))
             if gc_content < min_gc or gc_content > max_gc:
-                self._cost = abs(gc_content - target_gc)
+                self._cost = float(abs(gc_content - target_gc))
                 self._note += f" GC_Content: {gc_content:.1f}%"
 
 
@@ -213,7 +214,6 @@ class SecondaryLimit(Rule):
         """
         super().__init__(name=name, sequence=sequence, note=note)
         if sequence:
-            seq_obj = Seq(sequence)
             for i in range(len(sequence) - max_len):
                 substr = sequence[i : i + max_len]
                 substr_seq = Seq(substr)
@@ -227,4 +227,4 @@ class SecondaryLimit(Rule):
                     self._cost += 1
 
             if self._cost > 0:
-                self._note += f" Secondary structures detected"
+                self._note += " Secondary structures detected"

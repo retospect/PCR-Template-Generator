@@ -6,7 +6,6 @@ with various customization options.
 
 import argparse
 import sys
-from typing import Optional
 
 from .generator import (
     analyze_sequence_statistics,
@@ -18,7 +17,7 @@ from .generator import (
 def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="Generate optimized DNA templates for PCR primers and probes",
+        description=("Generate optimized DNA templates for PCR primers " "and probes"),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -137,7 +136,7 @@ Examples:
         "--unique-end-length",
         type=int,
         default=4,
-        help="Length of unique 3' ends for primer dimer prevention (default: 4)",
+        help=("Length of unique 3' ends for primer dimer prevention " "(default: 4)"),
     )
 
     # Output options
@@ -156,7 +155,7 @@ Examples:
     parser.add_argument(
         "--analyze",
         action="store_true",
-        help="Run sequence statistics analysis instead of generating templates",
+        help=("Run sequence statistics analysis instead of generating " "templates"),
     )
     parser.add_argument(
         "--samples",
@@ -262,7 +261,8 @@ def run_generation(args: argparse.Namespace) -> None:
         if args.verbose:
             success_rate = len(templates) / args.count * 100
             print(
-                f"Generated {len(templates)}/{args.count} templates ({success_rate:.1f}% success rate)"
+                f"Generated {len(templates)}/{args.count} templates "
+                f"({success_rate:.1f}% success rate)"
             )
 
 
@@ -272,7 +272,8 @@ def run_analysis(args: argparse.Namespace) -> None:
         print("PCR Template Generator - Sequence Analysis")
         print("=" * 50)
         print(
-            f"Analyzing {args.samples} random sequences of length {args.primer_length}"
+            f"Analyzing {args.samples} random sequences of length "
+            f"{args.primer_length}"
         )
         print()
 
@@ -293,8 +294,8 @@ def run_analysis(args: argparse.Namespace) -> None:
     print(f"Analysis Results for {args.primer_length}bp sequences:")
     print(f"Temperature: {temp_mean:.2f} ± {temp_std:.2f}°C")
     print(f"GC content: {gc_mean:.2f} ± {gc_std:.2f}%")
-    print(f"Temperature range: {min(temperatures):.1f} - {max(temperatures):.1f}°C")
-    print(f"GC content range: {min(gc_contents):.1f} - {max(gc_contents):.1f}%")
+    print(f"Temperature range: {min(temperatures):.1f} - " f"{max(temperatures):.1f}°C")
+    print(f"GC content range: {min(gc_contents):.1f} - " f"{max(gc_contents):.1f}%")
 
     # Optional: save data for plotting
     if args.verbose:
@@ -309,7 +310,10 @@ def run_analysis(args: argparse.Namespace) -> None:
             ax1.set_ylabel("Frequency")
             ax1.set_title("Distribution of Melting Temperatures")
             ax1.axvline(
-                temp_mean, color="red", linestyle="--", label=f"Mean: {temp_mean:.1f}°C"
+                temp_mean,
+                color="red",
+                linestyle="--",
+                label=f"Mean: {temp_mean:.1f}°C",
             )
             ax1.legend()
 
