@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pcr-template-generator"
-version = "1.0.0"
+version = "2.0.0"
 description = "A Python library for generating optimized DNA templates for PCR primers and probes using simulated annealing"
 authors = ["Reto <reto@example.com>"]
 license = "MIT"

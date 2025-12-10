@@ -21,6 +21,7 @@ from .generator import (
     run_experiment,
 )
 from .rules import (
+    GC,
     GCContent,
     LongRuns,
     MeltingRange,
@@ -30,11 +31,12 @@ from .rules import (
 )
 from .sequence import Sequence
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 __author__ = "Reto"
 __email__ = "reto@example.com"
 
 __all__ = [
+    "GC",
     "Rule",
     "GCContent",
     "LongRuns",
