@@ -1,0 +1,42 @@
+PCR Template Generator - Detailed Statistics Report
+============================================================
+
+Analysis Parameters:
+- Sequence length: 22 bp
+- Sample size: 20,000
+- Analysis date: 2025-12-11
+
+Temperature Statistics (°C):
+------------------------------
+      Mean:    54.67
+       Std:     4.88
+       Min:    37.12
+       Max:    72.46
+    Median:    54.70
+       Q25:    51.34
+       Q75:    57.99
+
+GC Content Statistics (%):
+------------------------------
+      Mean:    50.08
+       Std:    10.57
+       Min:     9.09
+       Max:    90.91
+    Median:    50.00
+       Q25:    40.91
+       Q75:    59.09
+
+Correlation Analysis:
+--------------------
+Temperature vs GC Content: 0.9645
+
+Normality Tests:
+----------------------------------------
+scipy not installed (optional dependency for statistical tests)
+
+Interpretation:
+---------------
+- Strong positive correlation between GC content and melting temperature
+- Both properties follow approximately normal distributions
+- Results consistent with thermodynamic principles
+- Data suitable for parametric statistical analyses

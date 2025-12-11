@@ -340,22 +340,35 @@ def create_comprehensive_plots(temperatures, gc_contents, stats):
     axes[0, 2].legend()
 
     # Box plots
-    axes[1, 0].boxplot([temperatures], labels=["Temperature"])
+    axes[1, 0].boxplot([temperatures], tick_labels=["Temperature"])
     axes[1, 0].set_ylabel("Temperature (°C)")
     axes[1, 0].set_title("Temperature Box Plot")
     axes[1, 0].grid(True, alpha=0.3)
 
-    axes[1, 1].boxplot([gc_contents], labels=["GC Content"])
+    axes[1, 1].boxplot([gc_contents], tick_labels=["GC Content"])
     axes[1, 1].set_ylabel("GC Content (%)")
     axes[1, 1].set_title("GC Content Box Plot")
     axes[1, 1].grid(True, alpha=0.3)
 
-    # Q-Q plot for normality check
-    from scipy import stats as scipy_stats
+    # Q-Q plot for normality check (requires scipy)
+    try:
+        from scipy import stats as scipy_stats
 
-    scipy_stats.probplot(temperatures, dist="norm", plot=axes[1, 2])
-    axes[1, 2].set_title("Temperature Q-Q Plot (Normality Check)")
-    axes[1, 2].grid(True, alpha=0.3)
+        scipy_stats.probplot(temperatures, dist="norm", plot=axes[1, 2])
+        axes[1, 2].set_title("Temperature Q-Q Plot (Normality Check)")
+        axes[1, 2].grid(True, alpha=0.3)
+    except ImportError:
+        axes[1, 2].text(
+            0.5,
+            0.5,
+            "scipy not installed\n(optional dependency)",
+            ha="center",
+            va="center",
+            transform=axes[1, 2].transAxes,
+        )
+        axes[1, 2].set_title("Q-Q Plot (scipy required)")
+        axes[1, 2].set_xticks([])
+        axes[1, 2].set_yticks([])
 
     plt.tight_layout()
     plt.savefig("comprehensive_analysis.png", dpi=300, bbox_inches="tight")
@@ -412,7 +425,7 @@ def create_length_comparison_plots(length_data):
 
     # Distribution comparison (violin plot style)
     temp_data = [length_data[l]["temperatures"] for l in lengths]
-    bp = axes[1, 1].boxplot(temp_data, labels=lengths, patch_artist=True)
+    bp = axes[1, 1].boxplot(temp_data, tick_labels=lengths, patch_artist=True)
     for patch in bp["boxes"]:
         patch.set_facecolor("lightblue")
     axes[1, 1].set_xlabel("Sequence Length (bp)")
@@ -501,20 +514,25 @@ def save_statistics_report(stats, temperatures, gc_contents):
         f.write("-" * 20 + "\n")
         f.write(f"Temperature vs GC Content: {temp_gc_corr:.4f}\n")
 
-        # Distribution analysis
-        from scipy import stats as scipy_stats
+        # Distribution analysis (requires scipy)
+        try:
+            from scipy import stats as scipy_stats
 
-        temp_shapiro = scipy_stats.shapiro(np.random.choice(temperatures, 5000))
-        gc_shapiro = scipy_stats.shapiro(np.random.choice(gc_contents, 5000))
+            temp_shapiro = scipy_stats.shapiro(np.random.choice(temperatures, 5000))
+            gc_shapiro = scipy_stats.shapiro(np.random.choice(gc_contents, 5000))
 
-        f.write(f"\nNormality Tests (Shapiro-Wilk, n=5000):\n")
-        f.write("-" * 40 + "\n")
-        f.write(
-            f"Temperature: W={temp_shapiro.statistic:.4f}, p={temp_shapiro.pvalue:.2e}\n"
-        )
-        f.write(
-            f"GC Content:  W={gc_shapiro.statistic:.4f}, p={gc_shapiro.pvalue:.2e}\n"
-        )
+            f.write(f"\nNormality Tests (Shapiro-Wilk, n=5000):\n")
+            f.write("-" * 40 + "\n")
+            f.write(
+                f"Temperature: W={temp_shapiro.statistic:.4f}, p={temp_shapiro.pvalue:.2e}\n"
+            )
+            f.write(
+                f"GC Content:  W={gc_shapiro.statistic:.4f}, p={gc_shapiro.pvalue:.2e}\n"
+            )
+        except ImportError:
+            f.write(f"\nNormality Tests:\n")
+            f.write("-" * 40 + "\n")
+            f.write("scipy not installed (optional dependency for statistical tests)\n")
 
         f.write(f"\nInterpretation:\n")
         f.write("-" * 15 + "\n")
