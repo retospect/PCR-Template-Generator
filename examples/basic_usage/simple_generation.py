@@ -18,7 +18,7 @@ from pcr_template_generator import Sequence, run_experiment
 
 def main():
     """Generate a single PCR template with default parameters."""
-    print("🧬 PCR Template Generator - Simple Example")
+    print("PCR Template Generator - Simple Example")
     print("=" * 50)
 
     # Generate a single template with default parameters
@@ -31,14 +31,14 @@ def main():
     )
 
     if template:
-        print("\n✅ Successfully generated template!")
-        print("\n📊 Template Layout:")
+        print("\nSuccessfully generated template!")
+        print("\nTemplate Layout:")
         print(template.display())
 
-        print(f"\n📈 Final optimization cost: {template.cost():.2f}")
+        print(f"\nFinal optimization cost: {template.cost():.2f}")
 
         # Show individual components
-        print("\n🔬 Template Components:")
+        print("\nTemplate Components:")
         print(f"Forward primer (5'→3'): {template.fwd_primer()}")
         print(f"Reverse primer (5'→3'): {template.rev_primer()}")
         print(f"Probe sequence:         {template.probe()}")
@@ -47,7 +47,7 @@ def main():
         # Show template properties
         from Bio.SeqUtils import MeltingTemp, gc_fraction
 
-        print("\n📋 Template Properties:")
+        print("\n Template Properties:")
         print(f"Template length:        {len(template.fwd())} bp")
         print(f"GC content:             {gc_fraction(template.fwd()) * 100:.1f}%")
         print(
@@ -62,20 +62,20 @@ def main():
 
         # Show rule violations (if any)
         if template.cost() > 0:
-            print("\n⚠️  Rule Violations:")
+            print("\n  Rule Violations:")
             print(template.rule_info())
         else:
-            print("\n✅ Perfect template - all design rules satisfied!")
+            print("\nPerfect template - all design rules satisfied!")
 
     else:
-        print("\n❌ Failed to generate template within iteration limit")
+        print("\n Failed to generate template within iteration limit")
         print("Try increasing max_iterations or adjusting parameters")
 
 
 def demonstrate_custom_sequence():
     """Demonstrate working with a custom DNA sequence."""
     print("\n" + "=" * 50)
-    print("🔬 Custom Sequence Analysis Example")
+    print("Custom Sequence Analysis Example")
     print("=" * 50)
 
     # Create a sequence object with custom DNA
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     main()
     demonstrate_custom_sequence()
 
-    print("\n🎉 Example completed!")
+    print("\n Example completed!")
     print("\nNext steps:")
     print("- Try batch_generation.py for multiple templates")
     print("- Try custom_parameters.py for parameter customization")

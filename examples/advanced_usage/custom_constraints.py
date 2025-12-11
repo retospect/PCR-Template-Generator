@@ -21,11 +21,11 @@ from pcr_template_generator import Sequence, run_experiment
 
 def main():
     """Demonstrate custom design constraints."""
-    print("🧬 PCR Template Generator - Custom Design Constraints")
+    print("PCR Template Generator - Custom Design Constraints")
     print("=" * 60)
 
     # Example 1: Relaxed constraints for difficult targets
-    print("\n1️⃣ Relaxed Constraints (for difficult targets)")
+    print("\n1⃣ Relaxed Constraints (for difficult targets)")
     print("-" * 50)
 
     relaxed_template = run_experiment(
@@ -48,14 +48,14 @@ def main():
     )
 
     if relaxed_template:
-        print("✅ Relaxed constraints template:")
+        print("Relaxed constraints template:")
         print(relaxed_template.display())
         analyze_template(relaxed_template, "Relaxed")
     else:
-        print("❌ Failed to generate relaxed template")
+        print(" Failed to generate relaxed template")
 
     # Example 2: Strict constraints for high-specificity
-    print("\n2️⃣ Strict Constraints (high-specificity)")
+    print("\n2⃣ Strict Constraints (high-specificity)")
     print("-" * 50)
 
     strict_template = run_experiment(
@@ -79,14 +79,14 @@ def main():
     )
 
     if strict_template:
-        print("✅ Strict constraints template:")
+        print("Strict constraints template:")
         print(strict_template.display())
         analyze_template(strict_template, "Strict")
     else:
-        print("❌ Failed to generate strict template")
+        print(" Failed to generate strict template")
 
     # Example 3: Custom probe temperature difference
-    print("\n3️⃣ Custom Probe Temperature Differences")
+    print("\n3⃣ Custom Probe Temperature Differences")
     print("-" * 50)
 
     probe_deltas = [5.0, 8.0, 12.0]  # Different probe-primer temperature differences
@@ -111,15 +111,15 @@ def main():
             rev_tm = MeltingTemp.Tm_NN(str(template.rev_primer()))
             actual_delta = probe_tm - (fwd_tm + rev_tm) / 2
 
-            print(f"  ✅ Success! Actual ΔTm: {actual_delta:.1f}°C")
+            print(f"  Success! Actual ΔTm: {actual_delta:.1f}°C")
             print(
                 f"     Probe Tm: {probe_tm:.1f}°C, Primer Tm: {(fwd_tm + rev_tm) / 2:.1f}°C"
             )
         else:
-            print(f"  ❌ Failed to achieve {delta}°C difference")
+            print(f"   Failed to achieve {delta}°C difference")
 
     # Example 4: Different run length tolerances
-    print("\n4️⃣ Run Length Tolerance Comparison")
+    print("\n4⃣ Run Length Tolerance Comparison")
     print("-" * 50)
 
     run_lengths = [2, 3, 4, 5]
@@ -141,13 +141,13 @@ def main():
             # Check actual run lengths in the sequence
             sequence_str = str(template.fwd())
             max_actual_run = find_max_run_length(sequence_str)
-            print(f"  ✅ Success! Max actual run: {max_actual_run}")
+            print(f"  Success! Max actual run: {max_actual_run}")
             print(f"     Cost: {template.cost():.2f}")
         else:
-            print(f"  ❌ Failed with max run length {max_run}")
+            print(f"   Failed with max run length {max_run}")
 
     # Example 5: Comparison of default vs custom constraints
-    print("\n5️⃣ Default vs Custom Constraints Comparison")
+    print("\n5⃣ Default vs Custom Constraints Comparison")
     print("-" * 50)
 
     compare_constraints()
@@ -236,23 +236,23 @@ def compare_constraints():
         print("Default constraints:")
         analyze_template(default_template, "Default")
     else:
-        print("Default constraints: ❌ Failed")
+        print("Default constraints:  Failed")
 
     if at_rich_template:
         print("\nAT-rich optimized constraints:")
         analyze_template(at_rich_template, "AT-rich")
     else:
-        print("\nAT-rich optimized constraints: ❌ Failed")
+        print("\nAT-rich optimized constraints:  Failed")
 
     # Success rate comparison
     print(f"\nSuccess comparison:")
-    print(f"  Default constraints: {'✅' if default_template else '❌'}")
-    print(f"  AT-rich constraints: {'✅' if at_rich_template else '❌'}")
+    print(f"  Default constraints: {'PASS' if default_template else 'FAIL'}")
+    print(f"  AT-rich constraints: {'PASS' if at_rich_template else 'FAIL'}")
 
 
 def demonstrate_constraint_effects():
     """Demonstrate how different constraints affect optimization difficulty."""
-    print("\n6️⃣ Constraint Effects on Optimization")
+    print("\n6⃣ Constraint Effects on Optimization")
     print("-" * 50)
 
     constraint_sets = [
@@ -320,11 +320,11 @@ def demonstrate_constraint_effects():
 
         if template:
             cost = template.cost()
-            results.append((name, cost, "✅"))
-            print(f"  ✅ Success! Cost: {cost:.2f}")
+            results.append((name, cost, "PASS"))
+            print(f"  Success! Cost: {cost:.2f}")
         else:
-            results.append((name, float("inf"), "❌"))
-            print(f"  ❌ Failed")
+            results.append((name, float("inf"), "FAIL"))
+            print(f"   Failed")
 
     # Summary
     print(f"\nConstraint Difficulty Summary:")
@@ -340,7 +340,7 @@ if __name__ == "__main__":
     main()
     demonstrate_constraint_effects()
 
-    print("\n🎉 Custom constraints example completed!")
+    print("\n Custom constraints example completed!")
     print("\nKey insights:")
     print("- Relaxed constraints make optimization easier but may reduce specificity")
     print("- Strict constraints improve specificity but may fail more often")

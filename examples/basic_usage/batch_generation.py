@@ -35,7 +35,7 @@ from pcr_template_generator import generate_multiple_templates
 
 def main():
     """Generate multiple PCR templates and analyze them."""
-    print("🧬 PCR Template Generator - Batch Generation Example")
+    print("PCR Template Generator - Batch Generation Example")
     print("=" * 60)
 
     # Generate multiple templates
@@ -50,13 +50,13 @@ def main():
     )
 
     if not templates:
-        print("❌ Failed to generate any templates")
+        print(" Failed to generate any templates")
         return
 
-    print(f"\n✅ Successfully generated {len(templates)} templates!")
+    print(f"\nSuccessfully generated {len(templates)} templates!")
 
     # Display all templates
-    print("\n📊 Generated Templates:")
+    print("\nGenerated Templates:")
     print("=" * 60)
 
     template_data = []
@@ -101,7 +101,7 @@ def main():
 
 def analyze_batch(template_data):
     """Analyze the batch of generated templates."""
-    print("\n📈 Batch Analysis:")
+    print("\nBatch Analysis:")
     print("=" * 40)
 
     costs = [t["cost"] for t in template_data]
@@ -126,7 +126,7 @@ def analyze_batch(template_data):
 
 def recommend_best_template(template_data):
     """Recommend the best template based on multiple criteria."""
-    print("\n🏆 Template Recommendation:")
+    print("\n Template Recommendation:")
     print("=" * 40)
 
     # Sort by cost (lower is better)
@@ -149,7 +149,7 @@ def recommend_best_template(template_data):
     )
 
     # Overall recommendation (weighted score)
-    print("\n🎯 Overall Recommendation:")
+    print("\nOverall Recommendation:")
 
     for template in template_data:
         # Calculate weighted score (lower is better)
@@ -174,7 +174,7 @@ def recommend_best_template(template_data):
 
 def save_templates_to_file(templates, filename="generated_templates.txt"):
     """Save generated templates to a file for later use."""
-    print(f"\n💾 Saving templates to {filename}...")
+    print(f"\nSaving templates to {filename}...")
 
     with open(filename, "w") as f:
         f.write("PCR Template Generator - Batch Results\n")
@@ -193,13 +193,13 @@ def save_templates_to_file(templates, filename="generated_templates.txt"):
             f.write(template.display())
             f.write("\n\n")
 
-    print(f"✅ Templates saved to {filename}")
+    print(f"Templates saved to {filename}")
 
 
 if __name__ == "__main__":
     main()
 
-    print("\n🎉 Batch generation example completed!")
+    print("\n Batch generation example completed!")
     print("\nNext steps:")
     print("- Try custom_parameters.py for parameter customization")
     print("- Check ../advanced_usage/ for more sophisticated examples")

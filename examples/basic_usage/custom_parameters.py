@@ -20,11 +20,11 @@ from pcr_template_generator import Sequence, run_experiment
 
 def main():
     """Demonstrate custom parameter usage."""
-    print("🧬 PCR Template Generator - Custom Parameters Example")
+    print("PCR Template Generator - Custom Parameters Example")
     print("=" * 60)
 
     # Example 1: Short template for limited space
-    print("\n1️⃣ Short Template (60bp total)")
+    print("\n1⃣ Short Template (60bp total)")
     print("-" * 40)
 
     short_template = run_experiment(
@@ -38,13 +38,13 @@ def main():
     )
 
     if short_template:
-        print("✅ Short template generated:")
+        print("Short template generated:")
         print(short_template.display())
         print(f"Cost: {short_template.cost():.2f}")
         analyze_template(short_template, "Short")
 
     # Example 2: Long template for robust amplification
-    print("\n2️⃣ Long Template (100bp total)")
+    print("\n2⃣ Long Template (100bp total)")
     print("-" * 40)
 
     long_template = run_experiment(
@@ -58,13 +58,13 @@ def main():
     )
 
     if long_template:
-        print("✅ Long template generated:")
+        print("Long template generated:")
         print(long_template.display())
         print(f"Cost: {long_template.cost():.2f}")
         analyze_template(long_template, "Long")
 
     # Example 3: High-stringency template with custom constraints
-    print("\n3️⃣ High-Stringency Template (Custom Constraints)")
+    print("\n3⃣ High-Stringency Template (Custom Constraints)")
     print("-" * 40)
 
     high_stringency = run_experiment(
@@ -86,13 +86,13 @@ def main():
     )
 
     if high_stringency:
-        print("✅ High-stringency template generated:")
+        print("High-stringency template generated:")
         print(high_stringency.display())
         print(f"Cost: {high_stringency.cost():.2f}")
         analyze_template(high_stringency, "High-stringency")
 
     # Example 4: Compare different optimization efforts
-    print("\n4️⃣ Optimization Effort Comparison")
+    print("\n4⃣ Optimization Effort Comparison")
     print("-" * 40)
 
     compare_optimization_efforts()
@@ -147,7 +147,7 @@ def compare_optimization_efforts():
     print("-" * 40)
 
     for name, iterations, cost, template in results:
-        success = "✅" if template else "❌"
+        success = "PASS" if template else "FAIL"
         cost_str = f"{cost:.2f}" if cost != float("inf") else "Failed"
         print(f"{name:<11} | {iterations:<10} | {cost_str:<6} | {success}")
 
@@ -164,7 +164,7 @@ def compare_optimization_efforts():
 
 def demonstrate_constraint_parameters():
     """Demonstrate the new configurable design constraint parameters."""
-    print("\n5️⃣ Configurable Design Constraints")
+    print("\n5⃣ Configurable Design Constraints")
     print("-" * 40)
 
     print("Testing different probe-primer temperature differences...")
@@ -194,15 +194,15 @@ def demonstrate_constraint_parameters():
             rev_tm = MeltingTemp.Tm_NN(str(template.rev_primer()))
             actual_delta = probe_tm - (fwd_tm + rev_tm) / 2
 
-            print(f"  ✅ Success! Actual ΔTm: {actual_delta:.1f}°C")
+            print(f"  Success! Actual ΔTm: {actual_delta:.1f}°C")
             print(f"     Cost: {template.cost():.2f}")
         else:
-            print(f"  ❌ Failed to achieve {delta}°C difference")
+            print(f"   Failed to achieve {delta}°C difference")
 
 
 def demonstrate_parameter_effects():
     """Demonstrate how different parameters affect the results."""
-    print("\n6️⃣ Parameter Effects Demonstration")
+    print("\n6⃣ Parameter Effects Demonstration")
     print("-" * 40)
 
     base_params = {
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     demonstrate_constraint_parameters()
     demonstrate_parameter_effects()
 
-    print("\n🎉 Custom parameters example completed!")
+    print("\n Custom parameters example completed!")
     print("\nKey takeaways:")
     print("- Shorter sequences are generally easier to optimize")
     print("- Higher melting temperatures require more optimization effort")

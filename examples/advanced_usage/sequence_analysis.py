@@ -33,7 +33,7 @@ try:
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
-    print("📝 Note: pandas not available - some features will be limited")
+    print("Note: pandas not available - some features will be limited")
 
 try:
     import seaborn as sns
@@ -42,35 +42,35 @@ try:
     sns.set_style("whitegrid")
 except ImportError:
     HAS_SEABORN = False
-    print("📝 Note: seaborn not available - using matplotlib only")
+    print("Note: seaborn not available - using matplotlib only")
 
 
 def main():
     """Run comprehensive sequence analysis."""
-    print("🧬 PCR Template Generator - Advanced Sequence Analysis")
+    print("PCR Template Generator - Advanced Sequence Analysis")
     print("=" * 60)
 
     # Analysis 1: Comprehensive statistical analysis
-    print("\n1️⃣ Comprehensive Statistical Analysis")
+    print("\n1⃣ Comprehensive Statistical Analysis")
     print("-" * 40)
     comprehensive_analysis()
 
     # Analysis 2: Length-dependent properties
-    print("\n2️⃣ Length-Dependent Properties Analysis")
+    print("\n2⃣ Length-Dependent Properties Analysis")
     print("-" * 40)
     length_analysis()
 
     # Analysis 3: Generated template analysis
-    print("\n3️⃣ Generated Template Quality Analysis")
+    print("\n3⃣ Generated Template Quality Analysis")
     print("-" * 40)
     template_quality_analysis()
 
     # Analysis 4: Correlation analysis
-    print("\n4️⃣ Property Correlation Analysis")
+    print("\n4⃣ Property Correlation Analysis")
     print("-" * 40)
     correlation_analysis()
 
-    print("\n🎉 Advanced analysis completed!")
+    print("\n Advanced analysis completed!")
     print("Check the generated plots and analysis files for detailed results.")
 
 
@@ -106,7 +106,7 @@ def comprehensive_analysis():
     }
 
     # Print statistics
-    print("\n📊 Comprehensive Statistics (22bp sequences, n=20,000):")
+    print("\nComprehensive Statistics (22bp sequences, n=20,000):")
     print("\nTemperature (°C):")
     for key, value in stats["temperature"].items():
         print(f"  {key.capitalize()}: {value:.2f}")
@@ -149,7 +149,7 @@ def length_analysis():
     create_length_comparison_plots(length_data)
 
     # Print summary
-    print("\n📊 Length Analysis Summary:")
+    print("\nLength Analysis Summary:")
     print("Length | Temp Mean | Temp Std | GC Mean | GC Std")
     print("-" * 50)
 
@@ -168,10 +168,10 @@ def template_quality_analysis():
     templates = generate_multiple_templates(count=20, debug=False, max_iterations=5000)
 
     if not templates:
-        print("❌ Failed to generate templates for analysis")
+        print(" Failed to generate templates for analysis")
         return
 
-    print(f"✅ Generated {len(templates)} templates")
+    print(f"Generated {len(templates)} templates")
 
     # Analyze template properties
     template_data = []
@@ -204,7 +204,7 @@ def template_quality_analysis():
     tm_diffs = [t["tm_diff"] for t in template_data]
     probe_deltas = [t["probe_delta"] for t in template_data]
 
-    print("\n📊 Template Quality Statistics:")
+    print("\nTemplate Quality Statistics:")
     print(f"Optimization cost:     {np.mean(costs):.2f} ± {np.std(costs):.2f}")
     print(f"Primer Tm difference:  {np.mean(tm_diffs):.2f} ± {np.std(tm_diffs):.2f}°C")
     print(
@@ -215,7 +215,7 @@ def template_quality_analysis():
     if HAS_PANDAS:
         df = pd.DataFrame(template_data)
         df.to_csv("template_quality_data.csv", index=False)
-        print("💾 Template data saved to: template_quality_data.csv")
+        print("Template data saved to: template_quality_data.csv")
 
 
 def correlation_analysis():
@@ -246,7 +246,7 @@ def correlation_analysis():
         # Calculate correlations
         corr_matrix = df.corr()
 
-        print("\n📊 Correlation Matrix:")
+        print("\nCorrelation Matrix:")
         print(corr_matrix.round(3))
 
         # Create correlation heatmap
@@ -264,11 +264,11 @@ def correlation_analysis():
             plt.tight_layout()
             plt.savefig("correlation_heatmap.png", dpi=300, bbox_inches="tight")
             plt.show()
-            print("💾 Correlation heatmap saved to: correlation_heatmap.png")
+            print("Correlation heatmap saved to: correlation_heatmap.png")
 
         # Save correlation data
         df.to_csv("correlation_data.csv", index=False)
-        print("💾 Correlation data saved to: correlation_data.csv")
+        print("Correlation data saved to: correlation_data.csv")
 
     else:
         # Manual correlation calculation
@@ -280,7 +280,7 @@ def correlation_analysis():
         temp_length_corr = np.corrcoef(temps, lengths_list)[0, 1]
         gc_length_corr = np.corrcoef(gcs, lengths_list)[0, 1]
 
-        print("\n📊 Key Correlations:")
+        print("\nKey Correlations:")
         print(f"Temperature vs GC Content: {temp_gc_corr:.3f}")
         print(f"Temperature vs Length:     {temp_length_corr:.3f}")
         print(f"GC Content vs Length:      {gc_length_corr:.3f}")
@@ -374,7 +374,7 @@ def create_comprehensive_plots(temperatures, gc_contents, stats):
     plt.savefig("comprehensive_analysis.png", dpi=300, bbox_inches="tight")
     plt.show()
 
-    print("💾 Comprehensive analysis plot saved to: comprehensive_analysis.png")
+    print("Comprehensive analysis plot saved to: comprehensive_analysis.png")
 
 
 def create_length_comparison_plots(length_data):
@@ -437,7 +437,7 @@ def create_length_comparison_plots(length_data):
     plt.savefig("length_comparison.png", dpi=300, bbox_inches="tight")
     plt.show()
 
-    print("💾 Length comparison plot saved to: length_comparison.png")
+    print("Length comparison plot saved to: length_comparison.png")
 
 
 def create_template_quality_plots(template_data):
@@ -484,7 +484,7 @@ def create_template_quality_plots(template_data):
     plt.savefig("template_quality.png", dpi=300, bbox_inches="tight")
     plt.show()
 
-    print("💾 Template quality plot saved to: template_quality.png")
+    print("Template quality plot saved to: template_quality.png")
 
 
 def save_statistics_report(stats, temperatures, gc_contents):
@@ -543,7 +543,7 @@ def save_statistics_report(stats, temperatures, gc_contents):
         f.write("- Results consistent with thermodynamic principles\n")
         f.write("- Data suitable for parametric statistical analyses\n")
 
-    print("💾 Detailed statistics report saved to: sequence_statistics_report.txt")
+    print("Detailed statistics report saved to: sequence_statistics_report.txt")
 
 
 if __name__ == "__main__":
