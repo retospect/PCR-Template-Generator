@@ -32,7 +32,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(simple_gen_path, "r") as original:
+            with open(simple_gen_path, "r", encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use fewer iterations and disable some features
@@ -77,7 +77,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(batch_gen_path, "r") as original:
+            with open(batch_gen_path, "r", encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use fewer templates and iterations
@@ -120,7 +120,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(custom_params_path, "r") as original:
+            with open(custom_params_path, "r", encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use minimal iterations
@@ -165,7 +165,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(custom_constraints_path, "r") as original:
+            with open(custom_constraints_path, "r", encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use minimal iterations and fewer tests
@@ -211,7 +211,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(seq_analysis_path, "r") as original:
+            with open(seq_analysis_path, "r", encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use much smaller sample sizes and fewer iterations

@@ -271,7 +271,7 @@ class TestCLIExamples:
 
         for script_name in cli_scripts:
             script_path = examples_dir / "cli_examples" / script_name
-            with open(script_path, "r") as f:
+            with open(script_path, "r", encoding="utf-8") as f:
                 first_line = f.readline().strip()
                 assert first_line.startswith(
                     "#!/bin/bash"
@@ -291,7 +291,7 @@ class TestIntegrationExamples:
         # Test that it's valid JSON
         import json
 
-        with open(notebook_path, "r") as f:
+        with open(notebook_path, "r", encoding="utf-8") as f:
             notebook_data = json.load(f)
 
         # Basic notebook structure checks
@@ -326,7 +326,7 @@ class TestExampleRequirements:
         examples_dir = get_examples_dir()
         req_path = examples_dir / "requirements.txt"
 
-        with open(req_path, "r") as f:
+        with open(req_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Should contain main package
@@ -344,7 +344,7 @@ class TestExampleRequirements:
 
         assert readme_path.exists(), "examples/README.md should exist"
 
-        with open(readme_path, "r") as f:
+        with open(readme_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Should contain key sections
@@ -454,7 +454,7 @@ class TestExampleIntegration:
 
         for py_file in python_files:
             # Test syntax by compiling
-            with open(py_file, "r") as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
 
             try:
@@ -470,7 +470,7 @@ class TestExampleIntegration:
         python_files = list(examples_dir.rglob("*.py"))
 
         for py_file in python_files:
-            with open(py_file, "r") as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Should have module docstring (skip shebang if present)
@@ -499,7 +499,7 @@ class TestExampleIntegration:
         python_files = list(examples_dir.rglob("*.py"))
 
         for py_file in python_files:
-            with open(py_file, "r") as f:
+            with open(py_file, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Check for correct imports
