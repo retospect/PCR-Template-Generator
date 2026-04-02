@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pcr-template-generator"
-version = "2.0.0"
+version = "2.0.1"
 description = "A Python library for generating optimized DNA templates for PCR primers and probes using simulated annealing"
 authors = [{name = "Reto", email = "reto@example.com"}]
 readme = "README.md"
