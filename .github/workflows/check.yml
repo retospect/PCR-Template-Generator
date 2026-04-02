@@ -33,6 +33,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: uv run pytest
+        env:
+          PYTHONUTF8: '1'
 
   publish:
     needs: [lint, test]
