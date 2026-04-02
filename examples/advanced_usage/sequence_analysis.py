@@ -16,8 +16,6 @@ Usage:
     python sequence_analysis.py
 """
 
-import statistics
-
 import matplotlib.pyplot as plt
 import numpy as np
 from Bio.SeqUtils import MeltingTemp, gc_fraction
@@ -494,7 +492,7 @@ def save_statistics_report(stats, temperatures, gc_contents):
         f.write("=" * 60 + "\n\n")
 
         f.write("Analysis Parameters:\n")
-        f.write(f"- Sequence length: 22 bp\n")
+        f.write("- Sequence length: 22 bp\n")
         f.write(f"- Sample size: {len(temperatures):,}\n")
         f.write(f"- Analysis date: {np.datetime64('today')}\n\n")
 
@@ -510,7 +508,7 @@ def save_statistics_report(stats, temperatures, gc_contents):
 
         # Additional statistics
         temp_gc_corr = np.corrcoef(temperatures, gc_contents)[0, 1]
-        f.write(f"\nCorrelation Analysis:\n")
+        f.write("\nCorrelation Analysis:\n")
         f.write("-" * 20 + "\n")
         f.write(f"Temperature vs GC Content: {temp_gc_corr:.4f}\n")
 
@@ -521,7 +519,7 @@ def save_statistics_report(stats, temperatures, gc_contents):
             temp_shapiro = scipy_stats.shapiro(np.random.choice(temperatures, 5000))
             gc_shapiro = scipy_stats.shapiro(np.random.choice(gc_contents, 5000))
 
-            f.write(f"\nNormality Tests (Shapiro-Wilk, n=5000):\n")
+            f.write("\nNormality Tests (Shapiro-Wilk, n=5000):\n")
             f.write("-" * 40 + "\n")
             f.write(
                 f"Temperature: W={temp_shapiro.statistic:.4f}, p={temp_shapiro.pvalue:.2e}\n"
@@ -530,11 +528,11 @@ def save_statistics_report(stats, temperatures, gc_contents):
                 f"GC Content:  W={gc_shapiro.statistic:.4f}, p={gc_shapiro.pvalue:.2e}\n"
             )
         except ImportError:
-            f.write(f"\nNormality Tests:\n")
+            f.write("\nNormality Tests:\n")
             f.write("-" * 40 + "\n")
             f.write("scipy not installed (optional dependency for statistical tests)\n")
 
-        f.write(f"\nInterpretation:\n")
+        f.write("\nInterpretation:\n")
         f.write("-" * 15 + "\n")
         f.write(
             "- Strong positive correlation between GC content and melting temperature\n"

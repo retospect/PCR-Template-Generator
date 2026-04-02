@@ -8,7 +8,7 @@ requirements.
 
 Requirements:
 - pcr-template-generator>=2.0.0
-- Python>=3.10
+- Python>=3.11
 
 Usage:
     python custom_constraints.py
@@ -16,7 +16,7 @@ Usage:
 
 from Bio.SeqUtils import MeltingTemp, gc_fraction
 
-from pcr_template_generator import Sequence, run_experiment
+from pcr_template_generator import run_experiment
 
 
 def main():
@@ -170,7 +170,7 @@ def analyze_template(template, name):
 
     # Check for rule violations
     if template.cost() > 0:
-        print(f"  Rule violations:")
+        print("  Rule violations:")
         violations = template.rule_info().strip().split("\n")
         for violation in violations[:3]:  # Show first 3 violations
             if violation.strip():
@@ -245,7 +245,7 @@ def compare_constraints():
         print("\nAT-rich optimized constraints:  Failed")
 
     # Success rate comparison
-    print(f"\nSuccess comparison:")
+    print("\nSuccess comparison:")
     print(f"  Default constraints: {'PASS' if default_template else 'FAIL'}")
     print(f"  AT-rich constraints: {'PASS' if at_rich_template else 'FAIL'}")
 
@@ -324,10 +324,10 @@ def demonstrate_constraint_effects():
             print(f"  Success! Cost: {cost:.2f}")
         else:
             results.append((name, float("inf"), "FAIL"))
-            print(f"   Failed")
+            print("   Failed")
 
     # Summary
-    print(f"\nConstraint Difficulty Summary:")
+    print("\nConstraint Difficulty Summary:")
     print("Difficulty | Result | Cost")
     print("-" * 30)
 

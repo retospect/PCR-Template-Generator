@@ -1,6 +1,5 @@
 """Tests for Sequence class."""
 
-import pytest
 from Bio.Seq import Seq
 
 from pcr_template_generator.sequence import Sequence
@@ -146,7 +145,9 @@ class TestSequenceMutation:
 
         assert len(mutated_str) == len(original_str)
         # Count differences
-        differences = sum(1 for a, b in zip(original_str, mutated_str) if a != b)
+        differences = sum(
+            1 for a, b in zip(original_str, mutated_str, strict=False) if a != b
+        )
         assert differences >= 0  # Could be 0 if same base chosen randomly
 
     def test_mutate_excessive_count(self):

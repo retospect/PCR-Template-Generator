@@ -1,7 +1,6 @@
 """Tests for CLI module."""
 
 import sys
-from io import StringIO
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -36,28 +35,32 @@ class TestCLIMain:
 
     def test_main_keyboard_interrupt(self):
         """Test CLI handling of keyboard interrupt."""
-        with patch.object(sys, "argv", ["pcr-template-generator"]):
-            with patch(
+        with (
+            patch.object(sys, "argv", ["pcr-template-generator"]),
+            patch(
                 "pcr_template_generator.cli.run_generation",
                 side_effect=KeyboardInterrupt,
-            ):
-                with patch("builtins.print") as mock_print:
-                    with pytest.raises(SystemExit) as exc_info:
-                        main()
-                    assert exc_info.value.code == 1
-                    mock_print.assert_called_with("\nOperation cancelled by user")
+            ),
+            patch("builtins.print") as mock_print,
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 1
+            mock_print.assert_called_with("\nOperation cancelled by user")
 
     def test_main_exception_handling(self):
         """Test CLI handling of general exceptions."""
-        with patch.object(sys, "argv", ["pcr-template-generator"]):
-            with patch(
+        with (
+            patch.object(sys, "argv", ["pcr-template-generator"]),
+            patch(
                 "pcr_template_generator.cli.run_generation",
                 side_effect=ValueError("Test error"),
-            ):
-                with patch("builtins.print") as mock_print:
-                    with pytest.raises(SystemExit) as exc_info:
-                        main()
-                    assert exc_info.value.code == 1
+            ),
+            patch("builtins.print"),
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 1
 
 
 class TestRunGeneration:
@@ -80,12 +83,14 @@ class TestRunGeneration:
         mock_sequence.display.return_value = "test display"
         mock_sequence.cost.return_value = 0.5
 
-        with patch(
-            "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+        with (
+            patch(
+                "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_generation(mock_args)
-                mock_print.assert_called_with("test display")
+            run_generation(mock_args)
+            mock_print.assert_called_with("test display")
 
     def test_run_generation_single_failure(self):
         """Test failed single template generation."""
@@ -125,18 +130,20 @@ class TestRunGeneration:
         mock_sequences = []
         for i in range(3):
             mock_seq = MagicMock(spec=Sequence)
-            mock_seq.display.return_value = f"template {i+1}"
+            mock_seq.display.return_value = f"template {i + 1}"
             mock_seq.cost.return_value = 0.5
             mock_sequences.append(mock_seq)
 
-        with patch(
-            "pcr_template_generator.cli.generate_multiple_templates",
-            return_value=mock_sequences,
+        with (
+            patch(
+                "pcr_template_generator.cli.generate_multiple_templates",
+                return_value=mock_sequences,
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_generation(mock_args)
-                # Should print each template
-                assert mock_print.call_count >= 3
+            run_generation(mock_args)
+            # Should print each template
+            assert mock_print.call_count >= 3
 
     def test_run_generation_multiple_failure(self):
         """Test failed multiple template generation."""
@@ -151,14 +158,17 @@ class TestRunGeneration:
         mock_args.probe_gap = 3
         mock_args.max_iterations = 1000
 
-        with patch(
-            "pcr_template_generator.cli.generate_multiple_templates", return_value=[]
+        with (
+            patch(
+                "pcr_template_generator.cli.generate_multiple_templates",
+                return_value=[],
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                with pytest.raises(SystemExit) as exc_info:
-                    run_generation(mock_args)
-                assert exc_info.value.code == 1
-                mock_print.assert_called_with("Failed to generate any templates")
+            with pytest.raises(SystemExit) as exc_info:
+                run_generation(mock_args)
+            assert exc_info.value.code == 1
+            mock_print.assert_called_with("Failed to generate any templates")
 
     def test_run_generation_verbose_output(self):
         """Test verbose output in generation."""
@@ -177,13 +187,15 @@ class TestRunGeneration:
         mock_sequence.display.return_value = "test display"
         mock_sequence.cost.return_value = 0.5
 
-        with patch(
-            "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+        with (
+            patch(
+                "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_generation(mock_args)
-                # Should print header and final cost
-                assert mock_print.call_count >= 2
+            run_generation(mock_args)
+            # Should print header and final cost
+            assert mock_print.call_count >= 2
 
     def test_run_generation_debug_output(self):
         """Test debug output in generation."""
@@ -202,13 +214,15 @@ class TestRunGeneration:
         mock_sequence.display.return_value = "test display"
         mock_sequence.cost.return_value = 0.5
 
-        with patch(
-            "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+        with (
+            patch(
+                "pcr_template_generator.cli.run_experiment", return_value=mock_sequence
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_generation(mock_args)
-                # Should print header due to debug=True
-                assert mock_print.call_count >= 2
+            run_generation(mock_args)
+            # Should print header due to debug=True
+            assert mock_print.call_count >= 2
 
 
 class TestRunAnalysis:
@@ -225,14 +239,16 @@ class TestRunAnalysis:
         mock_temps = [50.0, 55.0, 60.0] * 33 + [52.0]  # 100 values
         mock_gcs = [45.0, 50.0, 55.0] * 33 + [48.0]  # 100 values
 
-        with patch(
-            "pcr_template_generator.cli.analyze_sequence_statistics",
-            return_value=(mock_temps, mock_gcs),
+        with (
+            patch(
+                "pcr_template_generator.cli.analyze_sequence_statistics",
+                return_value=(mock_temps, mock_gcs),
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_analysis(mock_args)
-                # Should print analysis results
-                assert mock_print.call_count >= 4
+            run_analysis(mock_args)
+            # Should print analysis results
+            assert mock_print.call_count >= 4
 
     def test_run_analysis_verbose(self):
         """Test analysis with verbose output and plotting."""
@@ -251,16 +267,18 @@ class TestRunAnalysis:
         mock_axes = [MagicMock(), MagicMock()]
         mock_plt.subplots.return_value = (mock_fig, mock_axes)
 
-        with patch(
-            "pcr_template_generator.cli.analyze_sequence_statistics",
-            return_value=(mock_temps, mock_gcs),
+        with (
+            patch(
+                "pcr_template_generator.cli.analyze_sequence_statistics",
+                return_value=(mock_temps, mock_gcs),
+            ),
+            patch.dict("sys.modules", {"matplotlib.pyplot": mock_plt}),
         ):
-            with patch.dict("sys.modules", {"matplotlib.pyplot": mock_plt}):
-                with patch("builtins.print") as mock_print:
-                    run_analysis(mock_args)
-                    # Should create plots and save figure
-                    mock_plt.subplots.assert_called_once()
-                    mock_plt.savefig.assert_called_once()
+            with patch("builtins.print"):
+                run_analysis(mock_args)
+                # Should create plots and save figure
+                mock_plt.subplots.assert_called_once()
+                mock_plt.savefig.assert_called_once()
 
     def test_run_analysis_no_matplotlib(self):
         """Test analysis when matplotlib is not available."""
@@ -273,16 +291,18 @@ class TestRunAnalysis:
         mock_temps = [50.0, 55.0] * 25
         mock_gcs = [45.0, 50.0] * 25
 
-        with patch(
-            "pcr_template_generator.cli.analyze_sequence_statistics",
-            return_value=(mock_temps, mock_gcs),
+        with (
+            patch(
+                "pcr_template_generator.cli.analyze_sequence_statistics",
+                return_value=(mock_temps, mock_gcs),
+            ),
+            patch.dict("sys.modules", {"matplotlib.pyplot": None}),
         ):
-            with patch.dict("sys.modules", {"matplotlib.pyplot": None}):
-                with patch("builtins.print") as mock_print:
-                    run_analysis(mock_args)
-                    # Should print message about matplotlib not being available
-                    calls = [str(call) for call in mock_print.call_args_list]
-                    assert any("Matplotlib not available" in call for call in calls)
+            with patch("builtins.print") as mock_print:
+                run_analysis(mock_args)
+                # Should print message about matplotlib not being available
+                calls = [str(call) for call in mock_print.call_args_list]
+                assert any("Matplotlib not available" in call for call in calls)
 
     def test_run_analysis_debug(self):
         """Test analysis with debug output."""
@@ -295,14 +315,16 @@ class TestRunAnalysis:
         mock_temps = [50.0] * 10
         mock_gcs = [45.0] * 10
 
-        with patch(
-            "pcr_template_generator.cli.analyze_sequence_statistics",
-            return_value=(mock_temps, mock_gcs),
+        with (
+            patch(
+                "pcr_template_generator.cli.analyze_sequence_statistics",
+                return_value=(mock_temps, mock_gcs),
+            ),
+            patch("builtins.print") as mock_print,
         ):
-            with patch("builtins.print") as mock_print:
-                run_analysis(mock_args)
-                # Should print header due to debug=True
-                assert mock_print.call_count >= 2
+            run_analysis(mock_args)
+            # Should print header due to debug=True
+            assert mock_print.call_count >= 2
 
 
 class TestCLIIntegration:
@@ -365,11 +387,13 @@ class TestCLIIntegration:
 
     def test_cli_error_propagation(self):
         """Test that errors in sub-functions propagate correctly."""
-        with patch.object(sys, "argv", ["pcr-template-generator"]):
-            with patch(
+        with (
+            patch.object(sys, "argv", ["pcr-template-generator"]),
+            patch(
                 "pcr_template_generator.cli.run_generation",
                 side_effect=RuntimeError("Test error"),
-            ):
-                with pytest.raises(SystemExit) as exc_info:
-                    main()
-                assert exc_info.value.code == 1
+            ),
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 1

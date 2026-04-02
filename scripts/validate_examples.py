@@ -22,7 +22,7 @@ def get_examples_dir():
 def validate_python_syntax(file_path):
     """Validate Python file syntax."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             content = f.read()
         ast.parse(content)
         return True, None
@@ -35,7 +35,7 @@ def validate_python_syntax(file_path):
 def check_imports(file_path):
     """Check if file imports pcr_template_generator."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             content = f.read()
 
         # Check for package imports
@@ -52,7 +52,7 @@ def check_imports(file_path):
 def check_docstring(file_path):
     """Check if file has a module docstring."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             lines = f.readlines()
 
         # Skip very short files and __init__.py

@@ -2,8 +2,6 @@
 
 from unittest.mock import patch
 
-import pytest
-
 from pcr_template_generator.generator import (
     analyze_sequence_statistics,
     generate_multiple_templates,
@@ -24,7 +22,7 @@ class TestRunExperiment:
     def test_run_experiment_with_debug(self):
         """Test run_experiment with debug enabled."""
         with patch("builtins.print") as mock_print:
-            result = run_experiment(max_iterations=50, debug=True)
+            run_experiment(max_iterations=50, debug=True)
             # Should have printed debug messages
             assert mock_print.called
 
@@ -85,9 +83,7 @@ class TestGenerateMultipleTemplates:
     def test_generate_with_debug(self):
         """Test generation with debug output."""
         with patch("builtins.print") as mock_print:
-            templates = generate_multiple_templates(
-                count=2, max_iterations=50, debug=True
-            )
+            generate_multiple_templates(count=2, max_iterations=50, debug=True)
             # Should have printed debug messages
             assert mock_print.called
 
@@ -150,7 +146,7 @@ class TestAnalyzeSequenceStatistics:
     def test_analyze_with_debug(self):
         """Test analysis with debug output."""
         with patch("builtins.print") as mock_print:
-            temps, gcs = analyze_sequence_statistics(sample_count=20, debug=True)
+            _temps, _gcs = analyze_sequence_statistics(sample_count=20, debug=True)
             # Should have printed debug messages
             assert mock_print.called
 
@@ -215,20 +211,28 @@ class TestGeneratorIntegration:
 
     def test_consistent_parameters(self):
         """Test that same parameters give consistent results."""
-        params = {
-            "seq_length": 60,
-            "primer_length": 20,
-            "probe_length": 22,
-            "primer_melt": 53.0,
-            "probe_gap": 2,
-            "max_iterations": 100,
-        }
-
         # Generate single template
-        single = run_experiment(**params, debug=False)
+        single = run_experiment(
+            seq_length=60,
+            primer_length=20,
+            probe_length=22,
+            primer_melt=53.0,
+            probe_gap=2,
+            max_iterations=100,
+            debug=False,
+        )
 
         # Generate multiple templates
-        multiple = generate_multiple_templates(count=1, **params, debug=False)
+        multiple = generate_multiple_templates(
+            count=1,
+            seq_length=60,
+            primer_length=20,
+            probe_length=22,
+            primer_melt=53.0,
+            probe_gap=2,
+            max_iterations=100,
+            debug=False,
+        )
 
         # If both succeed, should have same parameters
         if single and multiple:
@@ -238,7 +242,7 @@ class TestGeneratorIntegration:
     def test_analysis_with_generation_params(self):
         """Test analysis using same parameters as generation."""
         # Use analysis to understand sequence properties
-        temps, gcs = analyze_sequence_statistics(
+        temps, _gcs = analyze_sequence_statistics(
             sequence_length=22, sample_count=100, debug=False
         )
 

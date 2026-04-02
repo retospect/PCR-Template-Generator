@@ -7,7 +7,7 @@ to meet specific experimental requirements.
 
 Requirements:
 - pcr-template-generator>=2.0.0
-- Python>=3.10
+- Python>=3.11
 
 Usage:
     python custom_parameters.py
@@ -15,7 +15,7 @@ Usage:
 
 from Bio.SeqUtils import MeltingTemp, gc_fraction
 
-from pcr_template_generator import Sequence, run_experiment
+from pcr_template_generator import run_experiment
 
 
 def main():
@@ -139,7 +139,7 @@ def compare_optimization_efforts():
             print(f"  Cost: {cost:.2f}")
         else:
             results.append((name, max_iter, float("inf"), None))
-            print(f"  Failed to generate")
+            print("  Failed to generate")
 
     # Summary
     print("\nOptimization Effort Summary:")

@@ -4,14 +4,12 @@ This module contains various rule classes that evaluate different aspects
 of DNA sequences to ensure they meet PCR primer and probe design criteria.
 """
 
-from typing import List, Union
-
 import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqUtils import MeltingTemp, gc_fraction
 
 
-def GC(sequence: Union[str, Seq]) -> float:
+def GC(sequence: str | Seq) -> float:
     """Calculate GC content (returns percentage 0-100).
 
     Uses BioPython's gc_fraction (available since 1.80) and converts
@@ -20,7 +18,7 @@ def GC(sequence: Union[str, Seq]) -> float:
     return float(gc_fraction(sequence) * 100.0)
 
 
-BASES: List[str] = ["a", "t", "g", "c"]
+BASES: list[str] = ["a", "t", "g", "c"]
 
 
 class Rule:

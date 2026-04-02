@@ -7,11 +7,12 @@ and analyze their properties for comparison and selection.
 
 Requirements:
 - pcr-template-generator>=2.0.0
-- Python>=3.10
+- Python>=3.11
 
 Usage:
     python batch_generation.py
 """
+
 """
 Batch PCR Template Generation Example
 
@@ -20,7 +21,7 @@ and analyze their properties for comparison and selection.
 
 Requirements:
 - pcr-template-generator>=2.0.0
-- Python>=3.10
+- Python>=3.11
 
 Usage:
     python batch_generation.py
@@ -108,17 +109,17 @@ def analyze_batch(template_data):
     gc_contents = [t["gc_content"] for t in template_data]
     tm_diffs = [t["tm_diff"] for t in template_data]
 
-    print(f"Cost statistics:")
+    print("Cost statistics:")
     print(f"  Mean: {statistics.mean(costs):.2f}")
     print(f"  Min:  {min(costs):.2f}")
     print(f"  Max:  {max(costs):.2f}")
 
-    print(f"\nGC content statistics:")
+    print("\nGC content statistics:")
     print(f"  Mean: {statistics.mean(gc_contents):.1f}%")
     print(f"  Min:  {min(gc_contents):.1f}%")
     print(f"  Max:  {max(gc_contents):.1f}%")
 
-    print(f"\nPrimer Tm difference statistics:")
+    print("\nPrimer Tm difference statistics:")
     print(f"  Mean: {statistics.mean(tm_diffs):.2f}°C")
     print(f"  Min:  {min(tm_diffs):.2f}°C")
     print(f"  Max:  {max(tm_diffs):.2f}°C")

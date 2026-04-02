@@ -7,7 +7,7 @@ to create a single optimized DNA template for PCR primers and probes.
 
 Requirements:
 - pcr-template-generator>=2.0.0
-- Python>=3.10
+- Python>=3.11
 
 Usage:
     python simple_generation.py

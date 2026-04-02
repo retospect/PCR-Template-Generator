@@ -9,12 +9,10 @@ Usage:
     python scripts/sync_examples.py
 """
 
-import os
 import re
 import sys
+import tomllib
 from pathlib import Path
-
-import toml
 
 
 def main():
@@ -32,8 +30,8 @@ def main():
 
     # Load pyproject.toml
     try:
-        with open(pyproject_path, "r") as f:
-            pyproject_data = toml.load(f)
+        with open(pyproject_path, "rb") as f:
+            pyproject_data = tomllib.load(f)
     except Exception as e:
         print(f"❌ Error reading pyproject.toml: {e}")
         sys.exit(1)
@@ -50,29 +48,28 @@ def main():
 
 def extract_package_info(pyproject_data):
     """Extract relevant package information from pyproject.toml."""
-    poetry_section = pyproject_data.get("tool", {}).get("poetry", {})
+    project = pyproject_data.get("project", {})
 
     package_info = {
-        "name": poetry_section.get("name", "pcr-template-generator"),
-        "version": poetry_section.get("version", "1.0.0"),
-        "description": poetry_section.get("description", ""),
-        "python_requires": poetry_section.get("dependencies", {}).get(
-            "python", ">=3.10"
-        ),
+        "name": project.get("name", "pcr-template-generator"),
+        "version": project.get("version", "1.0.0"),
+        "description": project.get("description", ""),
+        "python_requires": project.get("requires-python", ">=3.11"),
         "dependencies": {},
         "dev_dependencies": {},
     }
 
-    # Extract main dependencies
-    deps = poetry_section.get("dependencies", {})
-    for dep_name, dep_spec in deps.items():
-        if dep_name != "python":
-            package_info["dependencies"][dep_name] = dep_spec
+    # Extract main dependencies (PEP 621 format)
+    for dep in project.get("dependencies", []):
+        dep_name = dep.split(">=")[0].split("<=")[0].split("!=")[0].strip()
+        package_info["dependencies"][dep_name] = dep
 
-    # Extract dev dependencies
-    dev_deps = poetry_section.get("group", {}).get("dev", {}).get("dependencies", {})
-    for dep_name, dep_spec in dev_deps.items():
-        package_info["dev_dependencies"][dep_name] = dep_spec
+    # Extract dev dependencies from dependency-groups
+    dev_group = pyproject_data.get("dependency-groups", {}).get("dev", [])
+    for dep in dev_group:
+        if isinstance(dep, str):
+            dep_name = dep.split(">=")[0].split("<=")[0].split("!=")[0].strip()
+            package_info["dev_dependencies"][dep_name] = dep
 
     return package_info
 
@@ -131,7 +128,7 @@ def update_requirements_txt(examples_dir, package_info):
     with open(requirements_path, "w") as f:
         f.write("\n".join(content) + "\n")
 
-    print(f"  ✅ Updated requirements.txt")
+    print("  ✅ Updated requirements.txt")
 
 
 def update_example_files(examples_dir, package_info):
@@ -156,13 +153,13 @@ def update_example_files(examples_dir, package_info):
         if update_shell_file_refs(sh_file, package_info):
             updated_count += 1
 
-    print(f"  ✅ Updated shell script references")
+    print("  ✅ Updated shell script references")
 
 
 def update_file_version_refs(file_path, package_info):
     """Update version references in a Python file."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             content = f.read()
 
         original_content = content
@@ -193,7 +190,7 @@ def update_file_version_refs(file_path, package_info):
 def update_shell_file_refs(file_path, package_info):
     """Update package references in shell files."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             content = f.read()
 
         original_content = content

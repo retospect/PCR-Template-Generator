@@ -5,7 +5,6 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -32,7 +31,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(simple_gen_path, "r", encoding="utf-8") as original:
+            with open(simple_gen_path, encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use fewer iterations and disable some features
@@ -56,9 +55,9 @@ class TestExampleExecution:
                 )
 
                 # Should complete without errors
-                assert (
-                    result.returncode == 0
-                ), f"Example failed with stderr: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"Example failed with stderr: {result.stderr}"
+                )
                 assert "ImportError" not in result.stderr
                 assert "ModuleNotFoundError" not in result.stderr
 
@@ -77,7 +76,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(batch_gen_path, "r", encoding="utf-8") as original:
+            with open(batch_gen_path, encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use fewer templates and iterations
@@ -102,9 +101,9 @@ class TestExampleExecution:
                 )
 
                 # Should complete without errors
-                assert (
-                    result.returncode == 0
-                ), f"Example failed with stderr: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"Example failed with stderr: {result.stderr}"
+                )
                 assert "ImportError" not in result.stderr
                 assert "ModuleNotFoundError" not in result.stderr
 
@@ -120,7 +119,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(custom_params_path, "r", encoding="utf-8") as original:
+            with open(custom_params_path, encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use minimal iterations
@@ -145,9 +144,9 @@ class TestExampleExecution:
                 )
 
                 # Should complete without errors
-                assert (
-                    result.returncode == 0
-                ), f"Example failed with stderr: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"Example failed with stderr: {result.stderr}"
+                )
                 assert "ImportError" not in result.stderr
                 assert "ModuleNotFoundError" not in result.stderr
 
@@ -165,7 +164,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(custom_constraints_path, "r", encoding="utf-8") as original:
+            with open(custom_constraints_path, encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use minimal iterations and fewer tests
@@ -192,9 +191,9 @@ class TestExampleExecution:
                 )
 
                 # Should complete without errors
-                assert (
-                    result.returncode == 0
-                ), f"Example failed with stderr: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"Example failed with stderr: {result.stderr}"
+                )
                 assert "ImportError" not in result.stderr
                 assert "ModuleNotFoundError" not in result.stderr
 
@@ -211,7 +210,7 @@ class TestExampleExecution:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False
         ) as temp_file:
-            with open(seq_analysis_path, "r", encoding="utf-8") as original:
+            with open(seq_analysis_path, encoding="utf-8") as original:
                 content = original.read()
 
             # Modify to use much smaller sample sizes and fewer iterations
@@ -240,9 +239,9 @@ class TestExampleExecution:
                 )
 
                 # Should complete without errors
-                assert (
-                    result.returncode == 0
-                ), f"Example failed with stderr: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"Example failed with stderr: {result.stderr}"
+                )
                 assert "ImportError" not in result.stderr
                 assert "ModuleNotFoundError" not in result.stderr
 
@@ -322,7 +321,6 @@ class TestExampleDependencies:
     def test_biopython_import(self):
         """Test that BioPython imports work in examples context."""
         try:
-            from Bio.Seq import Seq
             from Bio.SeqUtils import MeltingTemp, gc_fraction
 
             # Basic functionality test

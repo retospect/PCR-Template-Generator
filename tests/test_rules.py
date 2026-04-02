@@ -1,8 +1,5 @@
 """Tests for rule classes."""
 
-import pytest
-from Bio.Seq import Seq
-
 from pcr_template_generator.rules import (
     GCContent,
     LongRuns,

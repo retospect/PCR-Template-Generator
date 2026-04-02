@@ -17,7 +17,7 @@ from .generator import (
 def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description=("Generate optimized DNA templates for PCR primers " "and probes"),
+        description=("Generate optimized DNA templates for PCR primers and probes"),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -136,7 +136,7 @@ Examples:
         "--unique-end-length",
         type=int,
         default=4,
-        help=("Length of unique 3' ends for primer dimer prevention " "(default: 4)"),
+        help=("Length of unique 3' ends for primer dimer prevention (default: 4)"),
     )
 
     # Output options
@@ -155,7 +155,7 @@ Examples:
     parser.add_argument(
         "--analyze",
         action="store_true",
-        help=("Run sequence statistics analysis instead of generating " "templates"),
+        help=("Run sequence statistics analysis instead of generating templates"),
     )
     parser.add_argument(
         "--samples",
@@ -272,8 +272,7 @@ def run_analysis(args: argparse.Namespace) -> None:
         print("PCR Template Generator - Sequence Analysis")
         print("=" * 50)
         print(
-            f"Analyzing {args.samples} random sequences of length "
-            f"{args.primer_length}"
+            f"Analyzing {args.samples} random sequences of length {args.primer_length}"
         )
         print()
 
@@ -294,15 +293,15 @@ def run_analysis(args: argparse.Namespace) -> None:
     print(f"Analysis Results for {args.primer_length}bp sequences:")
     print(f"Temperature: {temp_mean:.2f} ± {temp_std:.2f}°C")
     print(f"GC content: {gc_mean:.2f} ± {gc_std:.2f}%")
-    print(f"Temperature range: {min(temperatures):.1f} - " f"{max(temperatures):.1f}°C")
-    print(f"GC content range: {min(gc_contents):.1f} - " f"{max(gc_contents):.1f}%")
+    print(f"Temperature range: {min(temperatures):.1f} - {max(temperatures):.1f}°C")
+    print(f"GC content range: {min(gc_contents):.1f} - {max(gc_contents):.1f}%")
 
     # Optional: save data for plotting
     if args.verbose:
         try:
             import matplotlib.pyplot as plt
 
-            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+            _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
             # Temperature histogram
             ax1.hist(temperatures, bins=30, alpha=0.7, edgecolor="black")

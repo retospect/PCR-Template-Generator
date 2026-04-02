@@ -4,31 +4,31 @@ PCR Template Generator - Detailed Statistics Report
 Analysis Parameters:
 - Sequence length: 22 bp
 - Sample size: 100
-- Analysis date: 2025-12-11
+- Analysis date: 2026-04-02
 
 Temperature Statistics (°C):
 ------------------------------
-      Mean:    54.80
-       Std:     4.90
-       Min:    45.04
-       Max:    67.09
-    Median:    54.50
-       Q25:    51.44
-       Q75:    58.13
+      Mean:    54.23
+       Std:     5.13
+       Min:    41.70
+       Max:    67.19
+    Median:    53.76
+       Q25:    50.29
+       Q75:    57.91
 
 GC Content Statistics (%):
 ------------------------------
-      Mean:    50.50
-       Std:    10.26
-       Min:    31.82
-       Max:    77.27
+      Mean:    48.68
+       Std:    11.45
+       Min:    22.73
+       Max:    72.73
     Median:    50.00
        Q25:    40.91
-       Q75:    54.55
+       Q75:    55.68
 
 Correlation Analysis:
 --------------------
-Temperature vs GC Content: 0.9662
+Temperature vs GC Content: 0.9669
 
 Normality Tests:
 ----------------------------------------

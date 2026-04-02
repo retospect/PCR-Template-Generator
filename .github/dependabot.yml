@@ -1,43 +1,21 @@
 version: 2
 updates:
-  # Enable version updates for Python dependencies
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
-    reviewers:
-      - "retospect"
-    assignees:
-      - "retospect"
     commit-message:
       prefix: "deps"
-      include: "scope"
-    # Auto-merge minor and patch updates for dev dependencies
     groups:
-      dev-dependencies:
-        patterns:
-          - "pytest*"
-          - "black"
-          - "isort"
-          - "flake8"
-          - "mypy"
-          - "pre-commit"
-          - "bandit"
-
-  # Enable version updates for GitHub Actions
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    open-pull-requests-limit: 10
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
     commit-message:
       prefix: "ci"
-      include: "scope"
-    # GitHub Actions are generally safe to auto-update
     groups:
-      github-actions:
-        patterns:
-          - "actions/*"
-          - "github/*"
-          - "codecov/*"
+      actions:
+        patterns: ["*"]

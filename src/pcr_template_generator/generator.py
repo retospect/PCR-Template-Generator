@@ -5,7 +5,6 @@ annealing to generate DNA sequences that satisfy PCR design constraints.
 """
 
 import random
-from typing import List, Optional, Tuple
 
 from .sequence import Sequence
 
@@ -34,7 +33,7 @@ def run_experiment(
     max_run_length: int = 3,
     unique_end_length: int = 4,
     max_secondary_length: int = 4,
-) -> Optional[Sequence]:
+) -> Sequence | None:
     """Run simulated annealing optimization to generate optimal PCR template.
 
     This function uses a simplified simulated annealing approach:
@@ -147,7 +146,7 @@ def run_experiment(
             time_since_improvement = 0
 
             if debug:
-                print(f"Reduced cost to {best_cost:6.2f} at cycle " f"{iteration:5d}")
+                print(f"Reduced cost to {best_cost:6.2f} at cycle {iteration:5d}")
                 print(mutant_sequence.rule_info())
 
         iteration += 1
@@ -203,7 +202,7 @@ def generate_multiple_templates(
     max_run_length: int = 3,
     unique_end_length: int = 4,
     max_secondary_length: int = 4,
-) -> List[Sequence]:
+) -> list[Sequence]:
     """Generate multiple optimized PCR templates.
 
     Args:
@@ -275,7 +274,7 @@ def analyze_sequence_statistics(
     sequence_length: int = 22,
     sample_count: int = 10000,
     debug: bool = False,
-) -> Tuple[List[float], List[float]]:
+) -> tuple[list[float], list[float]]:
     """Analyze melting temperature and GC content statistics.
 
     Analyzes random sequences for their properties.
@@ -300,9 +299,7 @@ def analyze_sequence_statistics(
     gc_contents = []
 
     if debug:
-        print(
-            f"Analyzing {sample_count} random sequences of length " f"{sequence_length}"
-        )
+        print(f"Analyzing {sample_count} random sequences of length {sequence_length}")
 
     for i in range(sample_count):
         # Generate random sequence

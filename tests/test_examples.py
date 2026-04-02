@@ -3,7 +3,6 @@
 import os
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -76,7 +75,7 @@ class TestBasicUsageExamples:
             mock_templates = []
             for i in range(3):
                 mock_template = MagicMock()
-                mock_template.display.return_value = f"Mock template {i+1} display"
+                mock_template.display.return_value = f"Mock template {i + 1} display"
                 mock_template.cost.return_value = 0.5 + i * 0.1
                 mock_template.fwd_primer.return_value = "ATGCATGCATGCATGCATGCAG"
                 mock_template.rev_primer.return_value = "CTGCATGCATGCATGCATGCAT"
@@ -145,59 +144,48 @@ class TestAdvancedUsageExamples:
         assert seq_analysis_path.exists(), "sequence_analysis.py should exist"
 
         # Test imports by running with mocked functions
-        with patch(
-            "pcr_template_generator.analyze_sequence_statistics"
-        ) as mock_analyze:
-            with patch(
-                "pcr_template_generator.generate_multiple_templates"
-            ) as mock_gen:
-                with patch("matplotlib.pyplot.show"):  # Prevent plot display
-                    with patch("matplotlib.pyplot.savefig"):  # Prevent file saving
-                        # Mock analysis results
-                        mock_analyze.return_value = (
-                            [50.0, 55.0, 60.0] * 100,
-                            [45.0, 50.0, 55.0] * 100,
-                        )
+        with (
+            patch("pcr_template_generator.analyze_sequence_statistics") as mock_analyze,
+            patch("pcr_template_generator.generate_multiple_templates") as mock_gen,
+            patch("matplotlib.pyplot.show"),
+        ):  # Prevent plot display
+            with patch("matplotlib.pyplot.savefig"):  # Prevent file saving
+                # Mock analysis results
+                mock_analyze.return_value = (
+                    [50.0, 55.0, 60.0] * 100,
+                    [45.0, 50.0, 55.0] * 100,
+                )
 
-                        # Mock template generation
-                        mock_templates = []
-                        for i in range(5):
-                            mock_template = MagicMock()
-                            mock_template.display.return_value = f"Mock template {i+1}"
-                            mock_template.cost.return_value = 0.5 + i * 0.1
-                            mock_template.fwd_primer.return_value = (
-                                "ATGCATGCATGCATGCATGCAG"
-                            )
-                            mock_template.rev_primer.return_value = (
-                                "CTGCATGCATGCATGCATGCAT"
-                            )
-                            mock_template.probe.return_value = (
-                                "TTGAAGCACGCCGTTGTTTGCCACA"
-                            )
-                            mock_template.fwd.return_value = (
-                                "ATGCATGCATGCATGCATGCAGTAGTTGAAGCACGCCGTTGTTTGCCACA"
-                            )
-                            mock_templates.append(mock_template)
+                # Mock template generation
+                mock_templates = []
+                for i in range(5):
+                    mock_template = MagicMock()
+                    mock_template.display.return_value = f"Mock template {i + 1}"
+                    mock_template.cost.return_value = 0.5 + i * 0.1
+                    mock_template.fwd_primer.return_value = "ATGCATGCATGCATGCATGCAG"
+                    mock_template.rev_primer.return_value = "CTGCATGCATGCATGCATGCAT"
+                    mock_template.probe.return_value = "TTGAAGCACGCCGTTGTTTGCCACA"
+                    mock_template.fwd.return_value = (
+                        "ATGCATGCATGCATGCATGCAGTAGTTGAAGCACGCCGTTGTTTGCCACA"
+                    )
+                    mock_templates.append(mock_template)
 
-                        mock_gen.return_value = mock_templates
+                mock_gen.return_value = mock_templates
 
-                        # Execute the example
-                        result = subprocess.run(
-                            [sys.executable, str(seq_analysis_path)],
-                            capture_output=True,
-                            text=True,
-                            cwd=get_project_root(),
-                        )
+                # Execute the example
+                result = subprocess.run(
+                    [sys.executable, str(seq_analysis_path)],
+                    capture_output=True,
+                    text=True,
+                    cwd=get_project_root(),
+                )
 
-                        # Should not have import errors (except optional scipy)
-                        assert (
-                            "ImportError" not in result.stderr
-                            or "scipy" in result.stderr
-                        )
-                        if "ModuleNotFoundError" in result.stderr:
-                            assert (
-                                "scipy" in result.stderr
-                            ), f"Unexpected import error: {result.stderr}"
+                # Should not have import errors (except optional scipy)
+                assert "ImportError" not in result.stderr or "scipy" in result.stderr
+                if "ModuleNotFoundError" in result.stderr:
+                    assert "scipy" in result.stderr, (
+                        f"Unexpected import error: {result.stderr}"
+                    )
 
     def test_custom_constraints_imports(self):
         """Test that custom_constraints.py imports work."""
@@ -260,9 +248,9 @@ class TestCLIExamples:
         cli_analysis_path = examples_dir / "cli_examples" / "cli_analysis.sh"
 
         assert cli_analysis_path.exists(), "cli_analysis.sh should exist"
-        assert os.access(
-            cli_analysis_path, os.X_OK
-        ), "cli_analysis.sh should be executable"
+        assert os.access(cli_analysis_path, os.X_OK), (
+            "cli_analysis.sh should be executable"
+        )
 
     def test_cli_scripts_have_shebang(self):
         """Test that CLI scripts have proper shebang."""
@@ -271,11 +259,11 @@ class TestCLIExamples:
 
         for script_name in cli_scripts:
             script_path = examples_dir / "cli_examples" / script_name
-            with open(script_path, "r", encoding="utf-8") as f:
+            with open(script_path, encoding="utf-8") as f:
                 first_line = f.readline().strip()
-                assert first_line.startswith(
-                    "#!/bin/bash"
-                ), f"{script_name} should have bash shebang"
+                assert first_line.startswith("#!/bin/bash"), (
+                    f"{script_name} should have bash shebang"
+                )
 
 
 class TestIntegrationExamples:
@@ -291,7 +279,7 @@ class TestIntegrationExamples:
         # Test that it's valid JSON
         import json
 
-        with open(notebook_path, "r", encoding="utf-8") as f:
+        with open(notebook_path, encoding="utf-8") as f:
             notebook_data = json.load(f)
 
         # Basic notebook structure checks
@@ -306,9 +294,9 @@ class TestIntegrationExamples:
                 cell_sources.extend(cell["source"])
 
         combined_source = "".join(cell_sources)
-        assert (
-            "pcr_template_generator" in combined_source
-        ), "Notebook should import pcr_template_generator"
+        assert "pcr_template_generator" in combined_source, (
+            "Notebook should import pcr_template_generator"
+        )
 
 
 class TestExampleRequirements:
@@ -326,7 +314,7 @@ class TestExampleRequirements:
         examples_dir = get_examples_dir()
         req_path = examples_dir / "requirements.txt"
 
-        with open(req_path, "r", encoding="utf-8") as f:
+        with open(req_path, encoding="utf-8") as f:
             content = f.read()
 
         # Should contain main package
@@ -344,7 +332,7 @@ class TestExampleRequirements:
 
         assert readme_path.exists(), "examples/README.md should exist"
 
-        with open(readme_path, "r", encoding="utf-8") as f:
+        with open(readme_path, encoding="utf-8") as f:
             content = f.read()
 
         # Should contain key sections
@@ -454,7 +442,7 @@ class TestExampleIntegration:
 
         for py_file in python_files:
             # Test syntax by compiling
-            with open(py_file, "r", encoding="utf-8") as f:
+            with open(py_file, encoding="utf-8") as f:
                 content = f.read()
 
             try:
@@ -470,7 +458,7 @@ class TestExampleIntegration:
         python_files = list(examples_dir.rglob("*.py"))
 
         for py_file in python_files:
-            with open(py_file, "r", encoding="utf-8") as f:
+            with open(py_file, encoding="utf-8") as f:
                 content = f.read()
 
             # Should have module docstring (skip shebang if present)
@@ -486,10 +474,12 @@ class TestExampleIntegration:
                 or second_line.startswith("'''")
             )
 
-            if not has_docstring:
-                # Skip __init__.py files and very short files
-                if py_file.name != "__init__.py" and len(content.strip()) > 50:
-                    pytest.fail(f"Example {py_file} should have a module docstring")
+            if (
+                not has_docstring
+                and py_file.name != "__init__.py"
+                and len(content.strip()) > 50
+            ):
+                pytest.fail(f"Example {py_file} should have a module docstring")
 
     def test_example_imports_are_correct(self):
         """Test that examples import from the correct package."""
@@ -499,7 +489,7 @@ class TestExampleIntegration:
         python_files = list(examples_dir.rglob("*.py"))
 
         for py_file in python_files:
-            with open(py_file, "r", encoding="utf-8") as f:
+            with open(py_file, encoding="utf-8") as f:
                 content = f.read()
 
             # Check for correct imports

@@ -18,6 +18,8 @@ Example:
     ...     print(sequence.display())
 """
 
+from importlib.metadata import version
+
 from .generator import (
     analyze_sequence_statistics,
     generate_multiple_templates,
@@ -34,20 +36,18 @@ from .rules import (
 )
 from .sequence import Sequence
 
-__version__ = "2.0.0"
-__author__ = "Reto"
-__email__ = "reto@example.com"
+__version__ = version("pcr-template-generator")
 
 __all__ = [
     "GC",
-    "Rule",
     "GCContent",
     "LongRuns",
     "MeltingRange",
-    "SingleMatchOnly",
+    "Rule",
     "SecondaryLimit",
     "Sequence",
-    "run_experiment",
-    "generate_multiple_templates",
+    "SingleMatchOnly",
     "analyze_sequence_statistics",
+    "generate_multiple_templates",
+    "run_experiment",
 ]

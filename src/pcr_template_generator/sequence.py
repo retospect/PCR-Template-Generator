@@ -6,7 +6,6 @@ evaluation and mutation.
 """
 
 import random
-from typing import List
 
 from Bio.Seq import Seq
 
@@ -91,7 +90,7 @@ class Sequence:
         self._probe_gap = probe_gap
         self._cost_comment = ""
         self._debug = debug
-        self._rules: List[Rule] = []
+        self._rules: list[Rule] = []
 
         # Store design constraint parameters
         self._overall_gc_min = overall_gc_min
@@ -147,7 +146,7 @@ class Sequence:
         result = self._sequence[-self._primer_length :].reverse_complement()
         return result  # type: ignore[no-any-return]
 
-    def three_prime_ends(self, end_length: int = 4) -> List[Seq]:
+    def three_prime_ends(self, end_length: int = 4) -> list[Seq]:
         """Get all 3' ends of sequences and primers.
 
         Args:
@@ -229,9 +228,7 @@ class Sequence:
         msg = ""
         for rule in self._rules:
             if rule.get_cost() > 0 or verbose:
-                msg += (
-                    f"{rule.get_cost():.1f} {rule.get_name()} " f"{rule.get_note()}\n"
-                )
+                msg += f"{rule.get_cost():.1f} {rule.get_name()} {rule.get_note()}\n"
         return msg
 
     def cost(self) -> float:
@@ -240,7 +237,7 @@ class Sequence:
         Returns:
             Total penalty cost for this sequence
         """
-        rules: List[Rule] = []
+        rules: list[Rule] = []
 
         # Overall sequence rules
         rules.append(

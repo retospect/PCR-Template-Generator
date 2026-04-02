@@ -8,15 +8,10 @@
 
 <!-- Dynamic CI/CD and test status badges -->
 [![CI](https://github.com/retospect/PCR-Template-Generator/actions/workflows/check.yml/badge.svg)](https://github.com/retospect/PCR-Template-Generator/actions/workflows/check.yml)
-[![CodeQL](https://github.com/retospect/PCR-Template-Generator/actions/workflows/codeql.yml/badge.svg)](https://github.com/retospect/PCR-Template-Generator/actions/workflows/codeql.yml)
-[![codecov](https://codecov.io/gh/retospect/PCR-Template-Generator/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/retospect/PCR-Template-Generator)
-[![Tests](https://img.shields.io/github/actions/workflow/status/retospect/PCR-Template-Generator/check.yml?branch=main&label=tests)](https://github.com/retospect/PCR-Template-Generator/actions/workflows/check.yml)
 
 <!-- Quality and maintenance badges -->
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Type checked: mypy](https://img.shields.io/badge/type%20checked-mypy-blue.svg)](https://mypy-lang.org/)
-[![Security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 <!-- License and documentation badges -->
@@ -39,47 +34,6 @@
 [![Lines of code](https://img.shields.io/tokei/lines/github/retospect/PCR-Template-Generator.svg)](https://github.com/retospect/PCR-Template-Generator)
 
 A Python library for generating optimized DNA templates for PCR primers and probes using simulated annealing.
-
----
-
-## 📊 Badge Status Guide
-
-### 📦 Package Information
-| Badge | Description | Updates |
-|-------|-------------|---------|
-| ![PyPI version](https://img.shields.io/pypi/v/pcr-template-generator.svg) | Latest version on PyPI | When new version is published |
-| ![PyPI downloads](https://img.shields.io/pypi/dm/pcr-template-generator.svg) | Monthly downloads from PyPI | Daily |
-| ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pcr-template-generator.svg) | Supported Python versions | When pyproject.toml changes |
-| ![PyPI - Status](https://img.shields.io/pypi/status/pcr-template-generator.svg) | Development status (Alpha/Beta/Stable) | When package metadata changes |
-| ![PyPI - Wheel](https://img.shields.io/pypi/wheel/pcr-template-generator.svg) | Wheel distribution availability | When package is built |
-
-### 🧪 Testing & Quality
-| Badge | Description | Updates |
-|-------|-------------|---------|
-| ![CI](https://github.com/retospect/PCR-Template-Generator/actions/workflows/check.yml/badge.svg) | Continuous integration status | On every commit/PR |
-| ![CodeQL](https://github.com/retospect/PCR-Template-Generator/actions/workflows/codeql.yml/badge.svg) | Security analysis status | Weekly + on commits |
-| ![codecov](https://codecov.io/gh/retospect/PCR-Template-Generator/branch/main/graph/badge.svg) | Test coverage percentage | After CI runs |
-| ![Tests](https://img.shields.io/github/actions/workflow/status/retospect/PCR-Template-Generator/check.yml?branch=main&label=tests) | Latest test run status | On every commit |
-
-### 🔧 Code Quality
-| Badge | Description | Updates |
-|-------|-------------|---------|
-| ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg) | Code formatting standard | Static |
-| ![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336) | Import sorting standard | Static |
-| ![Type checked: mypy](https://img.shields.io/badge/type%20checked-mypy-blue.svg) | Type checking enabled | Static |
-| ![Security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg) | Security scanning enabled | Static |
-
-### 📊 Repository Stats
-| Badge | Description | Updates |
-|-------|-------------|---------|
-| ![GitHub stars](https://img.shields.io/github/stars/retospect/PCR-Template-Generator.svg) | Repository stars | Real-time |
-| ![GitHub issues](https://img.shields.io/github/issues/retospect/PCR-Template-Generator.svg) | Open issues count | Real-time |
-| ![GitHub last commit](https://img.shields.io/github/last-commit/retospect/PCR-Template-Generator.svg) | Last commit date | On every commit |
-| ![Lines of code](https://img.shields.io/tokei/lines/github/retospect/PCR-Template-Generator.svg) | Total lines of code | Daily |
-
-> **🔄 Dynamic Updates**: All badges automatically reflect the current state of the repository and PyPI package. No manual updates required!
-
----
 
 ## 🧬 Overview
 
@@ -300,46 +254,28 @@ Try the interactive Jupyter notebook:
 ```bash
 git clone https://github.com/retospect/PCR-Template-Generator.git
 cd PCR-Template-Generator
-poetry install --with dev
+uv sync
 ```
 
 ### Testing
 
 ```bash
-# Run all tests
-poetry run pytest
-
-# Run with coverage
-poetry run pytest --cov=pcr_template_generator --cov-report=html
-
-# Run linting tests
-poetry run pytest tests/test_linting.py -v
+uv run pytest
 ```
 
 ### Code Quality
 
 ```bash
-# Format code
-poetry run black src/ tests/
-
-# Sort imports  
-poetry run isort src/ tests/
-
-# Lint code
-poetry run flake8 src/
-
-# Type checking
-poetry run mypy src/
-
-# Security scan
-poetry run bandit -r src/
+uv run ruff check .
+uv run ruff format .
+uv run mypy src tests
 ```
 
 ### Pre-commit Hooks
 
 ```bash
-poetry run pre-commit install
-poetry run pre-commit run --all-files
+uv run pre-commit install
+uv run pre-commit run --all-files
 ```
 
 ## 📚 Scientific Background
@@ -364,7 +300,7 @@ Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Add tests for new functionality
-5. Ensure all tests pass (`poetry run pytest`)
+5. Ensure all tests pass (`uv run pytest`)
 6. Commit your changes (`git commit -m 'Add amazing feature'`)
 7. Push to the branch (`git push origin feature/amazing-feature`)
 8. Open a Pull Request
@@ -373,11 +309,15 @@ Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting and our security practices.
+
 ## 🙏 Acknowledgments
 
 - **BioPython** for molecular biology calculations
 - **NumPy** for numerical operations
-- **Poetry** for dependency management
+- **uv** for dependency management
 - The molecular biology community for PCR design principles
 
 ## 📞 Support

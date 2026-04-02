@@ -12,7 +12,6 @@ Usage:
 import json
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 
@@ -85,7 +84,7 @@ def check_version_compatibility(package, new_version, dep_type):
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
 
     try:
-        with open(pyproject_path, "r") as f:
+        with open(pyproject_path) as f:
             content = f.read()
     except Exception:
         return "unknown", "Could not read pyproject.toml"
@@ -231,7 +230,7 @@ def generate_action_plan(categories):
             new_version = info["new_version"]
             new_major = new_version.split(".")[0]
             next_major = str(int(new_major) + 1)
-            print(f"  - {package}: \">={info['old_version']},<{next_major}.0.0\"")
+            print(f'  - {package}: ">={info["old_version"]},<{next_major}.0.0"')
         print()
 
     # Need testing
