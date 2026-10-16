@@ -55,6 +55,7 @@ class TestBasicUsageExamples:
                     [sys.executable, str(simple_gen_path)],
                     capture_output=True,
                     text=True,
+                    timeout=300,
                     cwd=get_project_root(),
                 )
 
@@ -92,6 +93,7 @@ class TestBasicUsageExamples:
                 [sys.executable, str(batch_gen_path)],
                 capture_output=True,
                 text=True,
+                timeout=300,
                 cwd=get_project_root(),
             )
 
@@ -125,6 +127,7 @@ class TestBasicUsageExamples:
                 [sys.executable, str(custom_params_path)],
                 capture_output=True,
                 text=True,
+                timeout=300,
                 cwd=get_project_root(),
             )
 
@@ -177,6 +180,7 @@ class TestAdvancedUsageExamples:
                     [sys.executable, str(seq_analysis_path)],
                     capture_output=True,
                     text=True,
+                    timeout=300,
                     cwd=get_project_root(),
                 )
 
@@ -215,6 +219,7 @@ class TestAdvancedUsageExamples:
                 [sys.executable, str(custom_constraints_path)],
                 capture_output=True,
                 text=True,
+                timeout=300,
                 cwd=get_project_root(),
             )
 
@@ -420,6 +425,7 @@ class TestExampleSynchronization:
             [sys.executable, str(sync_script_path)],
             capture_output=True,
             text=True,
+            timeout=300,
             cwd=project_root,
         )
 

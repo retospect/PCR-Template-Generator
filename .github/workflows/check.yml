@@ -37,6 +37,7 @@ jobs:
         timeout-minutes: 10
         env:
           PYTHONUTF8: '1'
+          MPLBACKEND: Agg
 
   publish:
     needs: [lint, test]
