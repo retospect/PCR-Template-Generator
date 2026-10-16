@@ -42,7 +42,7 @@ class TestExampleExecution:
             )
 
             temp_file.write(modified_content)
-            temp_file.flush()
+            temp_file.close()  # Windows cannot unlink an open file
 
             try:
                 # Execute the modified example
@@ -88,7 +88,7 @@ class TestExampleExecution:
             )
 
             temp_file.write(modified_content)
-            temp_file.flush()
+            temp_file.close()  # Windows cannot unlink an open file
 
             try:
                 # Execute the modified example
@@ -131,7 +131,7 @@ class TestExampleExecution:
             )
 
             temp_file.write(modified_content)
-            temp_file.flush()
+            temp_file.close()  # Windows cannot unlink an open file
 
             try:
                 # Execute the modified example
@@ -178,7 +178,7 @@ class TestExampleExecution:
             )
 
             temp_file.write(modified_content)
-            temp_file.flush()
+            temp_file.close()  # Windows cannot unlink an open file
 
             try:
                 # Execute the modified example
@@ -226,7 +226,7 @@ class TestExampleExecution:
             )
 
             temp_file.write(modified_content)
-            temp_file.flush()
+            temp_file.close()  # Windows cannot unlink an open file
 
             try:
                 # Execute the modified example
